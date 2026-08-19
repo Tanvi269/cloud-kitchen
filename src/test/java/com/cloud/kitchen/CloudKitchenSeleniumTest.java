@@ -1,6 +1,7 @@
 package com.cloud.kitchen;
 
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
@@ -9,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CloudKitchenSeleniumTest {
 
     @Test
-    void testCloudKitchenPage() {
+    void testAddToCart() {
 
         WebDriver driver = new ChromeDriver();
 
@@ -17,12 +18,20 @@ public class CloudKitchenSeleniumTest {
             driver.get("http://localhost:8081/cloud-kitchen/");
             driver.manage().window().maximize();
 
-            String title = driver.getTitle();
+            // Click Chicken Biryani Add to Cart button
+            driver.findElement(
+                By.xpath("//button[contains(@onclick,\"Chicken Biryani\")]")
+            ).click();
 
-            assertTrue(title != null && !title.isEmpty());
+            // Close the JavaScript alert
+            driver.switchTo().alert().accept();
 
-            System.out.println("Cloud Kitchen page opened successfully.");
-            System.out.println("Page Title: " + title);
+            // Check cart text
+            String cartText = driver.findElement(By.id("cart")).getText();
+
+            System.out.println("Cart after adding item: " + cartText);
+
+            assertTrue(cartText.contains("1"));
 
         } finally {
             driver.quit();
