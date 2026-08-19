@@ -171,13 +171,13 @@
 <body>
 
 <nav>
-    <h1>🍴 Cloud Kitchen</h1>
+    <h1>&#127860; Cloud Kitchen</h1>
 
     <div>
-        <span id="cart">🛒 Cart: 0</span>
+        <span id="cart">&#128722; Cart: 0</span>
 
         <button onclick="showOrders()">
-            📋 My Orders
+            &#128203; My Orders
         </button>
     </div>
 </nav>
@@ -192,7 +192,7 @@
     text-align: center;
 ">
 
-    <h2>📊 Cloud Kitchen Dashboard</h2>
+    <h2>&#128202; Cloud Kitchen Dashboard</h2>
 
     <div style="
         display: flex;
@@ -208,7 +208,7 @@
             background: #f5f5f5;
             border-radius: 10px;
         ">
-            <h3>🍽️ Food Items</h3>
+            <h3>&#127869; Food Items</h3>
             <p id="foodCount">6</p>
         </div>
 
@@ -218,7 +218,7 @@
             background: #f5f5f5;
             border-radius: 10px;
         ">
-            <h3>🛒 Cart Items</h3>
+            <h3>&#128722; Cart Items</h3>
             <p id="dashboardCart">0</p>
         </div>
 
@@ -228,7 +228,7 @@
             background: #f5f5f5;
             border-radius: 10px;
         ">
-            <h3>📦 Orders</h3>
+            <h3>&#128230; Orders</h3>
             <p id="dashboardOrders">0</p>
         </div>
 
@@ -238,8 +238,8 @@
             background: #f5f5f5;
             border-radius: 10px;
         ">
-            <h3>💰 Order Value</h3>
-            <p id="dashboardTotal">₹0</p>
+            <h3>&#128176; Order Value</h3>
+            <p id="dashboardTotal">&#8377;0</p>
         </div>
 
     </div>
@@ -255,7 +255,7 @@
     <input
         type="text"
         id="foodSearch"
-        placeholder="🔍 Search food..."
+        placeholder="&#128269; Search food..."
         onkeyup="searchFood()"
         style="
             width: 300px;
@@ -274,7 +274,7 @@
             <div class="food-info">
                 <h3>Chicken Biryani</h3>
                 <p>Fragrant rice with delicious chicken.</p>
-                <span class="price">₹220</span>
+                <span class="price">&#8377;220</span>
                 <button onclick="addToCart('Chicken Biryani', 220)">
     Add to Cart
 </button>
@@ -286,7 +286,7 @@
             <div class="food-info">
                 <h3>Pizza</h3>
                 <p>Freshly baked cheesy pizza.</p>
-                <span class="price">₹250</span>
+                <span class="price">&#8377;250</span>
                 <button onclick="addToCart('Pizza', 250)">
     Add to Cart
 </button>
@@ -298,7 +298,7 @@
             <div class="food-info">
                 <h3>Classic Burger</h3>
                 <p>Juicy burger with fresh vegetables.</p>
-                <span class="price">₹150</span>
+                <span class="price">&#8377;150</span>
                 <button onclick="addToCart('Classic Burger', 150)">
     Add to Cart
 </button>
@@ -310,7 +310,7 @@
             <div class="food-info">
                 <h3>Italian Pasta</h3>
                 <p>Creamy and delicious pasta.</p>
-                <span class="price">₹180</span>
+                <span class="price">&#8377;180</span>
                 <button onclick="addToCart('Italian Pasta', 180)">
     Add to Cart
 </button>
@@ -322,7 +322,7 @@
             <div class="food-info">
                 <h3>Fried Rice</h3>
                 <p>Fresh vegetables tossed with rice.</p>
-                <span class="price">₹160</span>
+                <span class="price">&#8377;160</span>
                 <button onclick="addToCart('Fried Rice', 160)">
     Add to Cart
 </button>
@@ -334,7 +334,7 @@
             <div class="food-info">
                 <h3>Paneer Tikka</h3>
                 <p>Soft paneer with delicious spices.</p>
-                <span class="price">₹190</span>
+                <span class="price">&#8377;190</span>
                 <button onclick="addToCart('Paneer Tikka', 190)">
     Add to Cart
 </button>
@@ -344,19 +344,19 @@
     </div>
 </section>
 <section class="cart-section">
-    <h2>Your Cart 🛒</h2>
+    <h2>Your Cart &#128722;</h2>
 
     <div id="cartItems">
         <p>Your cart is empty.</p>
     </div>
 
-    <h3 id="cartTotal">Total: ₹0</h3>
+    <h3 id="cartTotal">Total: &#8377;0</h3>
 
     <button onclick="showCheckout()">Proceed to Checkout</button>
 </section>
 <section id="checkout" class="checkout-section" style="display: none;">
 
-    <h2>Checkout 🧾</h2>
+    <h2>Checkout &#129534;</h2>
 
     <form onsubmit="confirmOrder(event)">
 
@@ -399,7 +399,7 @@
 </section>
 
 <footer>
-    <p>© 2026 Cloud Kitchen | Fresh Food, Happy Customers</p>
+    <p>&#169; 2026 Cloud Kitchen | Fresh Food, Happy Customers</p>
 </footer>
 
 <script>
@@ -482,10 +482,10 @@ function updateCart() {
 
                 <strong>${item.name}</strong>
 
-                <p>Price: ₹${item.price}</p>
+                <p>Price: &#8377;${item.price}</p>
 
                 <button onclick="decreaseQuantity(${index})">
-                    −
+                    âˆ’
                 </button>
 
                 <span style="margin: 0 10px;">
@@ -497,7 +497,7 @@ function updateCart() {
                 </button>
 
                 <p>
-                    Item Total: ₹${itemTotal}
+                    Item Total: &#8377;${itemTotal}
                 </p>
 
                 <button onclick="removeItem(${index})">
@@ -510,9 +510,9 @@ function updateCart() {
         cartItems.appendChild(itemElement);
     });
 
-  cartCount.innerText = "🛒 Cart: " + totalItems;
+  cartCount.innerText = "&#128722; Cart: " + totalItems;
 
-cartTotal.innerText = "Total: ₹" + total;
+cartTotal.innerText = "Total: &#8377;" + total;
 
 document.getElementById("dashboardCart").innerText = totalItems;
 
@@ -538,13 +538,13 @@ function showOrders() {
         return;
     }
 
-    let message = "📋 ORDER HISTORY\n\n";
+    let message = "&#128203; ORDER HISTORY\n\n";
 
     orderHistory.forEach(function(order, index) {
 
         message += "Order #" + (index + 1) + "\n";
         message += "Items: " + order.items + "\n";
-        message += "Total: ₹" + order.total + "\n";
+        message += "Total: &#8377;" + order.total + "\n";
         message += "Status: Confirmed\n";
         message += "--------------------\n";
 
@@ -582,14 +582,13 @@ orderHistory.forEach(function(order) {
     orderValue += order.total;
 });
 
-document.getElementById("dashboardTotal").innerText =
-    "₹" + orderValue;
+document.getElementById("dashboardTotal").innerText = "&#8377;" + orderValue;
     
 
     alert(
-        "🎉 ORDER CONFIRMED!\n\n" +
+        "&#127881; ORDER CONFIRMED!\n\n" +
         "Items: " + totalItems + "\n" + 
-        "Total: ₹" + total + "\n\n" +
+        "Total: &#8377;" + total + "\n\n" +
         "Order Status: Confirmed"
     );
 
