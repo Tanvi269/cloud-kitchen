@@ -23,6 +23,12 @@ public class AdminController {
     @Autowired
     private OrderRepository orderRepository;
 
+    // ADDED: This catches requests to just "/admin" and redirects to the login page
+    @GetMapping("/admin")
+    public String adminRoot() {
+        return "redirect:/admin/login";
+    }
+
     @GetMapping("/admin/login")
     public String adminLogin() {
         return "admin-login"; 
@@ -73,7 +79,6 @@ public class AdminController {
         return "redirect:/admin/login";
     }
 
-    // ADDED METHOD FOR UPDATING ORDER STATUS FROM ADMIN DASHBOARD
     @PostMapping("/admin/orders/update-status")
     public String updateOrderStatusAdmin(@RequestParam Long orderId, @RequestParam String status, HttpSession session) {
         if (session.getAttribute("admin") == null) {
