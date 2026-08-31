@@ -12,6 +12,10 @@
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
         th { background-color: #f8f9fa; }
+        .btn-action { padding: 5px 10px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 12px; font-weight: bold; }
+        .btn-prep { background-color: #f39c12; }
+        .btn-ready { background-color: #3498db; }
+        .btn-done { background-color: #2ecc71; }
     </style>
 </head>
 <body>
@@ -32,14 +36,35 @@
                     <th>Items</th>
                     <th>Total</th>
                     <th>Status</th>
+                    <th>Update Status</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>#2</td>
-                    <td>Fried Rice x 1</td>
-                    <td>₹160</td>
-                    <td><span style="color: green; font-weight: bold;">CONFIRMED</span></td>
+                <tr th:if="${#lists.isEmpty(orders)}">
+                    <td colspan="5" style="text-align: center; color: #777;">No active kitchen orders.</td>
+                </tr>
+                <tr th:each="order : ${orders}">
+                    <td th:text="'#' + ${order.id}">#2</td>
+                    <td th:text="${order.foodItems}">Fried Rice x 1</td>
+                    <td th:text="'₹' + ${order.total}">₹160</td>
+                    <td><span style="color: green; font-weight: bold;" th:text="${order.status}">CONFIRMED</span></td>
+                    <td>
+                        <form th:action="@{/admin/orders/update-status}" method="post" style="display:inline;">
+                            <input type="hidden" name="orderId" th:value="${order.id}" />
+                            <input type="hidden" name="status" value="Preparing" />
+                            <button type="submit" class="btn-action btn-prep">Preparing</button>
+                        </form>
+                        <form th:action="@{/admin/orders/update-status}" method="post" style="display:inline;">
+                            <input type="hidden" name="orderId" th:value="${order.id}" />
+                            <input type="hidden" name="status" value="Ready" />
+                            <button type="submit" class="btn-action btn-ready">Ready</button>
+                        </form>
+                        <form th:action="@{/admin/orders/update-status}" method="post" style="display:inline;">
+                            <input type="hidden" name="orderId" th:value="${order.id}" />
+                            <input type="hidden" name="status" value="Completed" />
+                            <button type="submit" class="btn-action btn-done">Complete</button>
+                        </form>
+                    </td>
                 </tr>
             </tbody>
         </table>

@@ -10,26 +10,34 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/orders")
-public class OrderController {
+public class OrderApiController {
 
     @Autowired
     private OrderRepository orderRepository;
 
+    // Endpoint for customer status polling & admin viewing
     @GetMapping
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }
 
-    // Add this method to handle POST requests for saving orders
+    // Endpoint for saving a new customer order from checkout
     @PostMapping
     public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        if (order.getStatus() == null || order.getStatus().isEmpty()) {
+            order.setStatus("CONFIRMED");
+        }
         Order savedOrder = orderRepository.save(order);
         return ResponseEntity.ok(savedOrder);
     }
 
+    // Endpoint for updating order status from admin dashboard
     @PutMapping("/{id}/status")
     public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        Order order = orderRepository.findById(id).orElse(null);
+        if (order == null) {
+            return ResponseEntity.notFound().build();
+        }
         order.setStatus(status);
         Order updatedOrder = orderRepository.save(order);
         return ResponseEntity.ok(updatedOrder);

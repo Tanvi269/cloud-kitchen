@@ -1,5 +1,7 @@
-package com.example.cloudkitchen; // (Keep your existing package name)
+package com.cloud.kitchen;
 
+import com.cloud.kitchen.model.User;
+import com.cloud.kitchen.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,11 +17,10 @@ public class CloudKitchenApplication {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository) {
         return args -> {
-            // Automatically create default admin if not already present
             if (userRepository.findByEmail("admin@kitchen.com").isEmpty()) {
                 User admin = new User();
                 admin.setEmail("admin@kitchen.com");
-                admin.setPassword("admin123"); // Your login password
+                admin.setPassword("admin123");
                 admin.setRole("ADMIN");
                 userRepository.save(admin);
                 System.out.println("Default admin user created successfully!");
