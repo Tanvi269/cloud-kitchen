@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cloud Kitchen - Admin Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .logout-btn { background: #ff4d4d; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-weight: bold; }
+        .logout-btn:hover { background: #cc0000; }
+        .content { margin-top: 20px; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        th { background-color: #f8f9fa; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h2>Cloud Kitchen Admin Dashboard</h2>
+        <a href="/admin/logout" class="logout-btn">Logout</a>
+    </div>
+
+    <div class="content">
+        <h3>Live Orders Management</h3>
+        <p>Welcome back! Here you can monitor and manage incoming customer orders.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>#2</td>
+                    <td>Fried Rice x 1</td>
+                    <td>₹160</td>
+                    <td><span style="color: green; font-weight: bold;">CONFIRMED</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

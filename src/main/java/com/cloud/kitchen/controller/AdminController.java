@@ -1,14 +1,3 @@
-package com.cloud.kitchen.controller;
-
-import com.cloud.kitchen.model.User;
-import com.cloud.kitchen.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import jakarta.servlet.http.HttpSession;
-
 @Controller
 public class AdminController {
 
@@ -17,7 +6,7 @@ public class AdminController {
 
     @GetMapping("/admin/login")
     public String adminLogin() {
-        return "admin-login";
+        return "admin"; // Changed from "admin-login" to match your admin.html file
     }
 
     @PostMapping("/admin/login")
@@ -38,7 +27,7 @@ public class AdminController {
         }
 
         model.addAttribute("error", "Invalid admin email or password");
-        return "admin-login";
+        return "admin"; // Changed from "admin-login" to match your admin.html file
     }
 
     @GetMapping("/admin/dashboard")
@@ -48,7 +37,7 @@ public class AdminController {
             return "redirect:/admin/login";
         }
 
-        return "admin-dashboard";
+        return "admin-dashboard"; // Make sure you also have an admin-dashboard.html file in templates
     }
 
     @GetMapping("/admin/logout")
