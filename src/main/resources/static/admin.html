@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Kitchen - Admin Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: #f8f8f8; color: #222; padding: 30px; }
+        h1 { margin-bottom: 20px; }
+        .dashboard-cards { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+        .card { background: white; padding: 20px; border-radius: 8px; width: 220px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .order-card { background: white; padding: 15px; margin: 15px 0; border-radius: 8px; border-left: 6px solid #222; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        button { padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; color: white; font-weight: bold; margin-right: 5px; }
+        .btn-prepare { background: #0d6efd; }
+        .btn-ready { background: #198754; }
+        .btn-complete { background: #6c757d; }
+    </style>
+</head>
+<body>
+
+    <h1>👨‍🍳 Kitchen Admin Dashboard</h1>
+
+    <div class="dashboard-cards">
+        <div class="card">
+            <h3>🍽️ Food Items</h3>
+            <p id="foodCount" style="font-size: 24px; font-weight: bold;">6</p>
+        </div>
+        <div class="card">
+            <h3>📦 Total Orders</h3>
+            <p id="dashboardOrders" style="font-size: 24px; font-weight: bold;">0</p>
+        </div>
+        <div class="card">
+            <h3>💰 Order Value</h3>
+            <p id="dashboardTotal" style="font-size: 24px; font-weight: bold;">₹0</p>
+        </div>
+    </div>
+
+    <h2>Kitchen Display System (Live Orders)</h2>
+    <div id="liveOrdersContainer">
+        <p>Loading active kitchen orders...</p>
+    </div>
+
+<script>
+window.onload = function() {
+    loadAdminOrders();
+    setInterval(loadAdminOrders, 4000);
+};
+
+function loadAdminOrders() {
+    fetch('/api/orders')
+        .then(response => response.json())
+        .then(orders => {
+            let container = document.getElementById("liveOrdersContainer");
+            if (!container) return;
+            container.innerHTML = "";
+            let totalValue = 0;
+
+            if (orders.length === 0) {
+                container.innerHTML = "<p>No active kitchen orders.</p>";
+                document.getElementById("dashboardOrders").innerText = 0;
+                document.getElementById("dashboardTotal").innerText = "₹0";
+                return;
+            }
+
+            orders.forEach(order => {
+                totalValue += order.total || 0;
+                
+                let card = document.createElement("div");
+                card.className = "order-card";
+                card.innerHTML = `
+                    <strong>Order #${order.id || 'N/A'}</strong><br>
+                    <p><strong>Items:</strong> ${order.foodItems || order.items || 'N/A'}</p>
+                    <p><strong>Total:</strong> ₹${order.total}</p>
+                    <p><strong>Status:</strong> <span style="color: #d63384; font-weight: bold;">${order.status || 'CONFIRMED'}</span></p>
+                    <div style="margin-top: 10px;">
+                        ${getActionButtons(order.id, order.status)}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById("dashboardOrders").innerText = orders.length;
+            document.getElementById("dashboardTotal").innerText = "₹" + totalValue;
+        })
+        .catch(err => console.error("Error loading admin orders:", err));
+}
+
+function getActionButtons(orderId, currentStatus) {
+    let status = (currentStatus || 'CONFIRMED').toUpperCase();
+    if (status === 'CONFIRMED' || status === 'PENDING') {
+        return `<button class="btn-prepare" onclick="updateOrderStatus(${orderId}, 'PREPARING')">Accept & Prepare</button>`;
+    } else if (status === 'PREPARING') {
+        return `<button class="btn-ready" onclick="updateOrderStatus(${orderId}, 'READY')">Mark as Ready</button>`;
+    } else if (status === 'READY') {
+        return `<button class="btn-complete" onclick="updateOrderStatus(${orderId}, 'COMPLETED')">Complete / Delivered</button>`;
+    } else {
+        return `<span>✅ Finished</span>`;
+    }
+}
+
+function updateOrderStatus(orderId, newStatus) {
+    fetch(`/api/orders/${orderId}/status?status=${newStatus}`, {
+        method: 'PUT'
+    })
+    .then(response => {
+        if (response.ok) {
+            loadAdminOrders();
+        } else {
+            alert('Failed to update status on server.');
+        }
+    })
+    .catch(err => console.error("Error updating status:", err));
+}
+</script>
+
+</body>
+</html>

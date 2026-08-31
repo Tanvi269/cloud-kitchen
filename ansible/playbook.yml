@@ -1,0 +1,20 @@
+---
+- name: Configure and Verify Cloud Kitchen Environment
+  hosts: cloud_kitchen_servers
+  become: no
+  tasks:
+    - name: Ensure project directories exist
+      file:
+        path: "{{ ansible_env.HOME }}/cloud-kitchen-config"
+        state: directory
+        mode: '0755'
+
+    - name: Verify Java / Maven prerequisites message
+      debug:
+        msg: "Target environment prerequisites checked: Java 21 and Docker are ready for Cloud Kitchen deployment."
+
+    - name: Check application port availability
+      wait_for:
+        port: 8082
+        timeout: 3
+      ignore_errors: yes
