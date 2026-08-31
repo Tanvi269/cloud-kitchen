@@ -28,20 +28,25 @@ public String adminLoginSubmit(
         HttpSession session,
         Model model) {
 
-    User user = userRepository.findByEmail(email).orElse(null);
+    try {
+        User user = userRepository.findByEmail(email).orElse(null);
 
-    if (user != null &&
-        user.getPassword().equals(password) &&
-        "ADMIN".equals(user.getRole())) {
+        if (user != null &&
+            user.getPassword() != null &&
+            user.getPassword().equals(password) &&
+            "ADMIN".equals(user.getRole())) {
 
-        session.setAttribute("admin", user);
-        return "redirect:/admin/dashboard";
+            session.setAttribute("admin", user);
+            return "redirect:/admin/dashboard";
+        }
+
+        model.addAttribute("error", "Invalid admin email or password");
+    } catch (Exception e) {
+        model.addAttribute("error", "Database error: " + e.getMessage());
     }
-
-    model.addAttribute("error", "Invalid admin email or password");
+    
     return "admin";
 }
-
     @GetMapping("/admin/dashboard")
     public String dashboard(HttpSession session) {
 
