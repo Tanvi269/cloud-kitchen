@@ -17,7 +17,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/**", "/admin/**").permitAll()
                 .anyRequest().permitAll()
-            );
+            )
+            .formLogin(form -> form.disable());
         return http.build();
     }
 }
