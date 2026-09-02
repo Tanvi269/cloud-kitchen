@@ -15,7 +15,8 @@ public class CloudKitchenApplication {
     }
 
     @Bean
-    CommandLineRunner initDatabase(UserRepository userRepository) {
+    
+CommandLineRunner initDatabase(UserRepository userRepository) {
         return args -> {
             if (userRepository.findByEmail("admin@kitchen.com").isEmpty()) {
                 User admin = new User();

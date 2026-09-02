@@ -44,7 +44,7 @@ public class CloudKitchenSeleniumTest {
         WebDriver driver = new ChromeDriver();
 
         try {
-            driver.get("http://localhost:8081/cloud-kitchen/");
+            driver.get("http://localhost:8082/cloud-kitchen/");
             driver.manage().window().maximize();
 
             // Add Pizza
