@@ -1,4 +1,4 @@
-package com.cloud.kitchen.config;
+package com;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,12 +13,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disables CSRF so your login and order forms submit smoothly
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/menu", "/cart/**", "/orders/**", "/css/**", "/js/**", "/images/**", "/error", "/admin/**", "/admin/login", "/admin/dashboard").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/**", "/admin/**").permitAll()
+                .anyRequest().permitAll()
             );
-
         return http.build();
     }
 }
