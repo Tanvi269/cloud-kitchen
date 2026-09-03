@@ -1,6 +1,10 @@
 package com.cloud.kitchen.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "food_items")
@@ -13,10 +17,11 @@ public class FoodItem {
     private String name;
     private String description;
     private double price;
-    private String category; // e.g., Starters, Main Course, Desserts
-    private boolean available = true;
+    private String category;
+    private String imageUrl;
 
-    // Getters and Setters
+    public FoodItem() {}
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -32,6 +37,6 @@ public class FoodItem {
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
 
-    public boolean isAvailable() { return available; }
-    public void setAvailable(boolean available) { this.available = available; }
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }
