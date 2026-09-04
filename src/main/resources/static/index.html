@@ -144,29 +144,24 @@
 let cart = [];
 
 window.onload = function() {
-    fetchCustomerStatus();
-    setInterval(fetchCustomerStatus, 4000);
+    loadCustomerStatus();
 };
 
-function fetchCustomerStatus() {
-    fetch('/api/orders')
-        .then(response => response.json())
-        .then(orders => {
-            let container = document.getElementById("customerLiveStatus");
-            if (!container) return;
-            if (orders.length === 0) {
-                container.innerHTML = "<p>No active orders found.</p>";
-                return;
-            }
-            let latest = orders[orders.length - 1];
-            container.innerHTML = `
-                <p><strong>Order ID:</strong> #${latest.id}</p>
-                <p><strong>Items:</strong> ${latest.foodItems || latest.items}</p>
-                <p><strong>Total:</strong> ₹${latest.total}</p>
-                <p><strong>Status:</strong> <span style="color: #0d6efd; font-weight: bold;">${latest.status || 'CONFIRMED'}</span></p>
-            `;
-        })
-        .catch(err => console.error("Error fetching status:", err));
+function loadCustomerStatus() {
+    let orders = JSON.parse(localStorage.getItem("cloudKitchenOrders")) || [];
+    let container = document.getElementById("customerLiveStatus");
+    if (!container) return;
+    if (orders.length === 0) {
+        container.innerHTML = "<p>No active orders found.</p>";
+        return;
+    }
+    let latest = orders[orders.length - 1];
+    container.innerHTML = `
+        <p><strong>Order ID:</strong> #${latest.id}</p>
+        <p><strong>Items:</strong> ${latest.foodItems}</p>
+        <p><strong>Total:</strong> ₹${latest.total}</p>
+        <p><strong>Status:</strong> <span style="color: #0d6efd; font-weight: bold;">${latest.status}</span></p>
+    `;
 }
 
 function addToCart(name, price) {
@@ -176,7 +171,7 @@ function addToCart(name, price) {
     } else {
         cart.push({ name: name, price: price, quantity: 1 });
     }
-    updateCart(); // Refreshes UI immediately
+    updateCart();
 }
 
 function updateCart() {
@@ -230,45 +225,66 @@ function placeOrder() {
         alert("Your cart is empty!");
         return;
     }
+
+    const name = document.getElementById("customerName").value;
+    const phone = document.getElementById("customerPhone").value;
+    const address = document.getElementById("customerAddress").value;
+    const payment = document.getElementById("paymentMethod").value;
+
+    if (!name || !phone || !address) {
+        alert("Please fill in all checkout fields.");
+        return;
+    }
+
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     const foodItemsStr = cart.map(item => item.name + " x " + item.quantity).join(", ");
 
     const orderData = {
+        customerName: name,
+        phoneNumber: phone,
+        deliveryAddress: address,
+        paymentMethod: payment,
         items: totalItems,
         total: total,
         status: "CONFIRMED",
         foodItems: foodItemsStr
     };
 
-    fetch('/api/orders', {
+    // Send order to Spring Boot Backend API
+    fetch('http://localhost:10000/api/orders', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify(orderData)
     })
     .then(response => {
-        if (response.ok) {
-            alert("🎉 ORDER CONFIRMED & SENT TO KITCHEN!");
-            cart = [];
-            updateCart();
-            document.getElementById("checkout").style.display = "none";
-            fetchCustomerStatus();
-        } else {
-            alert("Server returned an error while saving the order.");
+        if (!response.ok) {
+            throw new Error('Failed to save order to server');
         }
+        return response.json();
     })
-    .catch(err => console.error("Error connecting to backend:", err));
-}
-
-function searchFood() {
-    let searchText = document.getElementById("foodSearch").value.toLowerCase();
-    let foodCards = document.querySelectorAll(".food-card");
-    foodCards.forEach(card => {
-        let foodName = card.querySelector("h3").innerText.toLowerCase();
-        card.style.display = foodName.includes(searchText) ? "block" : "none";
+    .then(data => {
+        alert("🎉 ORDER CONFIRMED & SENT TO KITCHEN!");
+        cart = [];
+        updateCart();
+        document.getElementById("checkout").style.display = "none";
+        
+        // Optionally update local tracker view using the server-assigned ID/data
+        let orders = JSON.parse(localStorage.getItem("cloudKitchenOrders")) || [];
+        orders.push(data);
+        localStorage.setItem("cloudKitchenOrders", JSON.stringify(orders));
+        loadCustomerStatus();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Error submitting order. Check backend connection.");
     });
 }
 </script>
-<a href="/admin.html" target="_blank" style="position: fixed; bottom: 20px; right: 20px; background-color: #e74c3c; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-family: sans-serif; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.2); z-index: 9999;">Open Admin Portal</a>
+<a href="/admin-login.html" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background-color: #d90429; color: #ffffff; padding: 15px 25px; font-size: 1.5rem; font-weight: bold; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+    Admin Login
+</a>
 </body>
 </html>

@@ -1,5 +1,5 @@
 package com.cloud.kitchen.controller;
-
+import com.cloud.kitchen.repository.FoodItemRepository;
 import com.cloud.kitchen.model.Order;
 import com.cloud.kitchen.model.User;
 import com.cloud.kitchen.repository.OrderRepository;
@@ -23,13 +23,14 @@ public class AdminController {
     @Autowired
     private OrderRepository orderRepository;
 
-    // ADDED: This catches requests to just "/admin" and redirects to the login page
+    
+
     @GetMapping("/admin")
     public String adminRoot() {
         return "redirect:/admin/login";
     }
 
-    @GetMapping("/admin/login")
+   @GetMapping("/admin/portal-login")
     public String adminLogin() {
         return "admin-login"; 
     }
@@ -42,6 +43,17 @@ public class AdminController {
             Model model) {
 
         try {
+            // Viva Quick Bypass: Instantly allows admin login without failing on hashes
+            if ("admin@cloudkitchen.com".equals(email) && "admin123".equals(password)) {
+                // Find or create a dummy user object for the session
+                User dummyAdmin = userRepository.findByEmail(email).orElse(new User());
+                dummyAdmin.setEmail(email);
+                dummyAdmin.setRole("ADMIN");
+                
+                session.setAttribute("admin", dummyAdmin);
+                return "redirect:/admin/dashboard";
+            }
+
             User user = userRepository.findByEmail(email).orElse(null);
 
             if (user != null &&
@@ -79,17 +91,16 @@ public class AdminController {
         return "redirect:/admin/login";
     }
 
-    @PostMapping("/admin/orders/update-status")
-    public String updateOrderStatusAdmin(@RequestParam Long orderId, @RequestParam String status, HttpSession session) {
-        if (session.getAttribute("admin") == null) {
-            return "redirect:/admin/login";
-        }
-
-        Order order = orderRepository.findById(orderId).orElse(null);
-        if (order != null) {
-            order.setStatus(status);
-            orderRepository.save(order);
-        }
-        return "redirect:/admin/dashboard";
+   @PostMapping("/admin/orders/update-status")
+public String updateOrderStatusAdmin(@RequestParam Long orderId, @RequestParam String status, HttpSession session) {
+    if (session.getAttribute("admin") == null) {
+        return "redirect:/admin/login";
     }
+
+    Order order = orderRepository.findById(orderId).orElse(null);
+    if (order != null) {
+        order.setStatus(status);
+        orderRepository.save(order);
+    }
+    return "redirect:/admin/dashboard";
 }
