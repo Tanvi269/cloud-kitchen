@@ -25,14 +25,41 @@ public class OrderApiController {
     public ResponseEntity<?> createOrder(@RequestBody Order order) {
         try {
             System.out.println(">>> RECEIVED ORDER: " + order);
+
             if (order.getStatus() == null || order.getStatus().isEmpty()) {
                 order.setStatus("CONFIRMED");
             }
+
             Order savedOrder = orderRepository.save(order);
             return ResponseEntity.ok(savedOrder);
+
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+            return ResponseEntity.internalServerError()
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
+    // UPDATE ORDER STATUS FROM ADMIN
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateOrderStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+
+        try {
+            Order order = orderRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+
+            order.setStatus(status);
+
+            Order updatedOrder = orderRepository.save(order);
+
+            return ResponseEntity.ok(updatedOrder);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError()
+                    .body("Error: " + e.getMessage());
         }
     }
 }

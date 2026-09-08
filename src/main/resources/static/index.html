@@ -167,22 +167,43 @@ window.onload = function() {
     loadCustomerStatus();
 };
 
-function loadCustomerStatus() {
-    let orders = JSON.parse(localStorage.getItem("cloudKitchenOrders")) || [];
+async function loadCustomerStatus() {
     let container = document.getElementById("customerLiveStatus");
     if (!container) return;
-    if (orders.length === 0) {
-        container.innerHTML = "<p>No active orders found.</p>";
-        return;
+
+    try {
+        const response = await fetch('/api/orders');
+
+        if (!response.ok) {
+            throw new Error("Failed to load orders");
+        }
+
+        const orders = await response.json();
+
+        if (orders.length === 0) {
+            container.innerHTML = "<p>No active orders found.</p>";
+            return;
+        }
+
+        // Show latest order
+        let latest = orders[orders.length - 1];
+
+        container.innerHTML = `
+            <p><strong>Order ID:</strong> #${latest.id}</p>
+            <p><strong>Items:</strong> ${latest.foodItems || 'N/A'}</p>
+            <p><strong>Total:</strong> ₹${latest.total || 0}</p>
+            <p><strong>Status:</strong>
+                <span style="color: #0d6efd; font-weight: bold;">
+                    ${latest.status || 'CONFIRMED'}
+                </span>
+            </p>
+        `;
+
+    } catch (error) {
+        console.error("Error loading customer status:", error);
     }
-    let latest = orders[orders.length - 1];
-    container.innerHTML = `
-        <p><strong>Order ID:</strong> #${latest.id}</p>
-        <p><strong>Items:</strong> ${latest.foodItems}</p>
-        <p><strong>Total:</strong> ₹${latest.total}</p>
-        <p><strong>Status:</strong> <span style="color: #0d6efd; font-weight: bold;">${latest.status}</span></p>
-    `;
 }
+setInterval(loadCustomerStatus, 4000);
 
 function addToCart(name, price) {
     let existing = cart.find(item => item.name === name);

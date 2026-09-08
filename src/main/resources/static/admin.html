@@ -66,7 +66,7 @@ window.onload = function() {
 
 async function loadDashboardData() {
     try {
-        let response = await fetch('http://localhost:10000/api/orders');
+        let response = await fetch('/api/orders');
         if (!response.ok) return;
         let orders = await response.json();
 
@@ -117,7 +117,7 @@ async function loadDashboardData() {
 
 async function updateStatus(orderId, newStatus) {
     try {
-        let response = await fetch(`http://localhost:10000/api/orders/${orderId}/status?status=${newStatus}`, {
+        let response = await fetch(`/api/orders/${orderId}/status?status=${newStatus}`, {
             method: 'PUT'
         });
         if (response.ok) {
