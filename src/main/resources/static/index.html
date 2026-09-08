@@ -143,6 +143,26 @@
 <script>
 let cart = [];
 
+// ADD THE SEARCH FUNCTION HERE:
+function searchFood() {
+    let input = document.getElementById('foodSearch').value.toLowerCase();
+    let cards = document.getElementsByClassName('food-card');
+    for (let i = 0; i < cards.length; i++) {
+        let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+        if (title.includes(input)) {
+            cards[i].style.display = "";
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+}
+
+window.onload = function() {
+    loadCustomerStatus();
+};
+
+// ... rest of your existing functions (loadCustomerStatus, addToCart, etc.)
+
 window.onload = function() {
     loadCustomerStatus();
 };
@@ -251,14 +271,14 @@ function placeOrder() {
         foodItems: foodItemsStr
     };
 
-    // Send order to Spring Boot Backend API
-    fetch('http://localhost:10000/api/orders', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(orderData)
-    })
+   fetch('/api/orders', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(orderData)
+})
+
     .then(response => {
         if (!response.ok) {
             throw new Error('Failed to save order to server');
@@ -279,7 +299,7 @@ function placeOrder() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert("Error submitting order. Check backend connection.");
+        alert("Error submitting order: " + error.message); // This will show the actual message
     });
 }
 </script>

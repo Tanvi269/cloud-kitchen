@@ -23,8 +23,6 @@ public class AdminController {
     @Autowired
     private OrderRepository orderRepository;
 
-    
-
     @GetMapping("/admin")
     public String adminRoot() {
         return "redirect:/admin/login";
@@ -92,15 +90,16 @@ public class AdminController {
     }
 
    @PostMapping("/admin/orders/update-status")
-public String updateOrderStatusAdmin(@RequestParam Long orderId, @RequestParam String status, HttpSession session) {
-    if (session.getAttribute("admin") == null) {
-        return "redirect:/admin/login";
-    }
+    public String updateOrderStatusAdmin(@RequestParam Long orderId, @RequestParam String status, HttpSession session) {
+        if (session.getAttribute("admin") == null) {
+            return "redirect:/admin/login";
+        }
 
-    Order order = orderRepository.findById(orderId).orElse(null);
-    if (order != null) {
-        order.setStatus(status);
-        orderRepository.save(order);
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            order.setStatus(status);
+            orderRepository.save(order);
+        }
+        return "redirect:/admin/dashboard";
     }
-    return "redirect:/admin/dashboard";
 }

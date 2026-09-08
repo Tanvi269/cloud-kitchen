@@ -1,6 +1,6 @@
 package com.cloud.kitchen.controller;
 
-import com.cloud.kitchen.model;
+import com.cloud.kitchen.model.Order;
 import com.cloud.kitchen.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,20 +31,8 @@ public class OrderApiController {
             Order savedOrder = orderRepository.save(order);
             return ResponseEntity.ok(savedOrder);
         } catch (Exception e) {
-            System.err.println(">>> ERROR SAVING ORDER:");
             e.printStackTrace();
             return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
         }
-    }
-
-    @PutMapping("/{id}/status")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable Long id, @RequestParam String status) {
-        Order order = orderRepository.findById(id).orElse(null);
-        if (order == null) {
-            return ResponseEntity.notFound().build();
-        }
-        order.setStatus(status);
-        Order updatedOrder = orderRepository.save(order);
-        return ResponseEntity.ok(updatedOrder);
     }
 }

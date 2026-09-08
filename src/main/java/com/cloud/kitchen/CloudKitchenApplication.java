@@ -1,15 +1,18 @@
 package com.cloud.kitchen;
 
-import com.cloud.kitchen.model.User;
-import com.cloud.kitchen.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import com.cloud.kitchen.model.User;
+import com.cloud.kitchen.repository.UserRepository;
 
 @SpringBootApplication
+@ComponentScan(basePackages = "com.cloud.kitchen")
+@EnableJpaRepositories(basePackages = "com.cloud.kitchen.repository")
 public class CloudKitchenApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(CloudKitchenApplication.class, args);
     }
