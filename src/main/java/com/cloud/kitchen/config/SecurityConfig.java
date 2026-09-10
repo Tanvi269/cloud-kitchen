@@ -5,8 +5,10 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -26,22 +28,17 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
-                // Customer pages
                 .requestMatchers(
                     "/",
                     "/index.html",
+                    "/admin-login.html",
                     "/images/**",
                     "/css/**",
                     "/js/**"
                 ).permitAll()
 
-                // Admin login page
-            // Admin login page and login endpoint
-.requestMatchers(
-    "/admin",
-    "/admin/portal-login",
-    "/admin/login"
-).permitAll()
+                // Allow all admin URLs
+                .requestMatchers("/admin/**").permitAll()
 
                 // Custom login APIs
                 .requestMatchers(

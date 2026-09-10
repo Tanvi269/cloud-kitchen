@@ -24,14 +24,14 @@ public class AdminController {
     private OrderRepository orderRepository;
 
     @GetMapping("/admin")
-public String adminRoot() {
-    return "redirect:/admin-login.html";
-}
+    public String adminRoot() {
+        return "redirect:/admin/portal-login";
+    }
 
    @GetMapping("/admin/portal-login")
-public String adminLogin() {
-    return "redirect:/admin-login.html";
-}
+    public String adminLogin() {
+        return "admin-login"; 
+    }
 
     @PostMapping("/admin/login")
     public String adminLoginSubmit(
@@ -74,7 +74,7 @@ public String adminLogin() {
     @GetMapping("/admin/dashboard")
     public String dashboard(HttpSession session, Model model) {
         if (session.getAttribute("admin") == null) {
-            return "redirect:/admin/portal-login";
+            return "redirect:/admin/login";
         }
 
         List<Order> orders = orderRepository.findAll();
@@ -86,13 +86,13 @@ public String adminLogin() {
     @GetMapping("/admin/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/admin/portal-login";
+        return "redirect:/admin/login";
     }
 
    @PostMapping("/admin/orders/update-status")
     public String updateOrderStatusAdmin(@RequestParam Long orderId, @RequestParam String status, HttpSession session) {
         if (session.getAttribute("admin") == null) {
-            return "redirect:/admin/portal-login";
+            return "redirect:/admin/login";
         }
 
         Order order = orderRepository.findById(orderId).orElse(null);

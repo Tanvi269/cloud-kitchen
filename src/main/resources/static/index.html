@@ -273,13 +273,16 @@ function placeOrder() {
     const payment = document.getElementById("paymentMethod").value;
 
     if (!name || !phone || !address) {
-        alert("Please fill in all checkout fields.");
-        return;
-    }
+    alert("Please fill in all checkout fields.");
+    return;
+}
+
 
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const foodItemsStr = cart.map(item => item.name + " x " + item.quantity).join(", ");
+    const foodItemsStr = cart.map(item =>
+    `${item.name} x ${item.quantity} @ ₹${item.price} = ₹${item.price * item.quantity}`
+).join(", ");
 
     const orderData = {
         customerName: name,

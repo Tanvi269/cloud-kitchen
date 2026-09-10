@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+
 import com.cloud.kitchen.model.User;
 import com.cloud.kitchen.repository.UserRepository;
 
@@ -13,20 +14,27 @@ import com.cloud.kitchen.repository.UserRepository;
 @ComponentScan(basePackages = "com.cloud.kitchen")
 @EnableJpaRepositories(basePackages = "com.cloud.kitchen.repository")
 public class CloudKitchenApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(CloudKitchenApplication.class, args);
     }
 
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository) {
+
         return args -> {
-            if (userRepository.findByEmail("admin@kitchen.com").isEmpty()) {
+
+            if (userRepository.findByEmail("admin@cloudkitchen.com").isEmpty()) {
+
                 User admin = new User();
-                admin.setEmail("admin@kitchen.com");
-                admin.setPassword("admin123");
+                admin.setEmail("admin@cloudkitchen.com");
+                admin.setPassword(
+                    new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder()
+                        .encode("admin123")
+                );
                 admin.setRole("ADMIN");
+
                 userRepository.save(admin);
-                System.out.println("Default admin user created successfully!");
             }
         };
     }
