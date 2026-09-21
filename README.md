@@ -1,7 +1,7 @@
 ## 🚀 How to Use
 
 ### 1. Customer Flow
-* Open the application URL (or local `http://localhost:10000`).
+* Open the application URL (or local `http://localhost:9090`).
 * Browse available food items on the menu, add them to your cart, and place an order.
 * Track your live order status in real time as it moves through different stages.
 
