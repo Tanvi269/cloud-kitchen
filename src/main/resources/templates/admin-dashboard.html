@@ -1,61 +1,907 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Cloud Kitchen - Admin Dashboard</title>
+
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
-        .header { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 15px 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .logout-btn { background: #ff4d4d; color: white; padding: 8px 15px; text-decoration: none; border-radius: 4px; font-weight: bold; }
-        .logout-btn:hover { background: #cc0000; }
-        .content { margin-top: 20px; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
-        th { background-color: #f8f9fa; }
-        .btn-action { padding: 5px 10px; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 12px; font-weight: bold; }
-        .btn-prep { background-color: #f39c12; }
-        .btn-ready { background-color: #3498db; }
-        .btn-done { background-color: #2ecc71; }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* ================= HEADER ================= */
+
+        .top-header {
+            height: 75px;
+            background: linear-gradient(135deg, #172554, #1e3a8a);
+            color: white;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 35px;
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-icon {
+            width: 45px;
+            height: 45px;
+
+            background: #f59e0b;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
+        }
+
+        .brand-text h2 {
+            margin: 0;
+            font-size: 22px;
+            letter-spacing: 0.3px;
+        }
+
+        .brand-text p {
+            margin: 3px 0 0;
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .admin-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        .admin-text {
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.12);
+            color: white;
+
+            padding: 9px 16px;
+
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 8px;
+
+            text-decoration: none;
+            font-weight: 600;
+
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        .main-container {
+            max-width: 1250px;
+            margin: 35px auto;
+            padding: 0 25px;
+        }
+
+        .page-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .page-heading h1 {
+            margin: 0;
+            font-size: 30px;
+            color: #172554;
+        }
+
+        .page-heading p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .live-badge {
+            background: #dcfce7;
+            color: #15803d;
+
+            padding: 9px 16px;
+
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .live-badge span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 7px;
+        }
+
+
+        /* ================= INFO BOX ================= */
+
+        .info-box {
+            background: linear-gradient(135deg, #eff6ff, #f8fbff);
+
+            border: 1px solid #bfdbfe;
+
+            border-radius: 14px;
+
+            padding: 18px 22px;
+
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+        .info-icon {
+            width: 45px;
+            height: 45px;
+
+            background: #dbeafe;
+            color: #2563eb;
+
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+        .info-box strong {
+            color: #1d4ed8;
+            font-size: 16px;
+        }
+
+        .info-box p {
+            margin: 4px 0 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+
+        /* ================= ORDERS CARD ================= */
+
+        .orders-container {
+            background: white;
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+
+            border: 1px solid #e5e7eb;
+        }
+
+        .orders-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            margin-bottom: 20px;
+        }
+
+        .orders-title h2 {
+            margin: 0;
+            color: #172554;
+            font-size: 21px;
+        }
+
+        .orders-icon {
+            font-size: 23px;
+        }
+
+
+        /* ================= ORDER CARD ================= */
+
+        .order-card {
+            border: 1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            margin-bottom: 15px;
+
+            transition: 0.2s;
+
+            background: #ffffff;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow: 0 8px 20px rgba(15,23,42,0.08);
+
+            border-color: #c7d2fe;
+        }
+
+        .order-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 16px;
+        }
+
+        .order-id {
+            font-size: 18px;
+            font-weight: 800;
+            color: #172554;
+        }
+
+        .order-label {
+            font-size: 12px;
+            color: #94a3b8;
+            margin-right: 5px;
+        }
+
+
+        /* ================= STATUS ================= */
+
+        .status {
+            display: inline-block;
+
+            padding: 7px 13px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 800;
+
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+
+        /* ================= ORDER DETAILS ================= */
+
+        .order-details {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+
+            margin-bottom: 18px;
+
+            padding: 15px;
+
+            background: #f8fafc;
+
+            border-radius: 10px;
+        }
+
+        .detail-item {
+            flex: 1;
+        }
+
+        .detail-label {
+            display: block;
+
+            font-size: 11px;
+
+            color: #94a3b8;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+
+        /* ================= BUTTONS ================= */
+
+        .actions {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .action-form {
+            margin: 0;
+        }
+
+        .btn-action {
+            border: none;
+
+            padding: 9px 15px;
+
+            border-radius: 8px;
+
+            color: white;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .btn-accept {
+            background: #10b981;
+        }
+
+        .btn-accept:hover {
+            background: #059669;
+        }
+
+        .btn-preparing {
+            background: #2563eb;
+        }
+
+        .btn-preparing:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-prepared {
+            background: #f59e0b;
+        }
+
+        .btn-prepared:hover {
+            background: #d97706;
+        }
+
+        .btn-complete {
+            background: #64748b;
+        }
+
+        .btn-complete:hover {
+            background: #475569;
+        }
+
+
+        /* ================= EMPTY ================= */
+
+        .empty-message {
+            text-align: center;
+
+            padding: 50px;
+
+            color: #94a3b8;
+        }
+
+
+        /* ================= FOOTER ================= */
+
+        .footer {
+            text-align: center;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+
+            margin: 25px 0;
+        }
+
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 768px) {
+
+            .top-header {
+                padding: 0 15px;
+            }
+
+            .admin-text {
+                display: none;
+            }
+
+            .main-container {
+                padding: 0 12px;
+                margin-top: 20px;
+            }
+
+            .page-heading {
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .page-heading h1 {
+                font-size: 23px;
+            }
+
+            .order-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .detail-item {
+                width: 100%;
+            }
+
+            .orders-container {
+                padding: 15px;
+            }
+        }
+
     </style>
 </head>
+
+
 <body>
 
-    <div class="container mt-4">
-    <h2>Kitchen Display System (Live Orders)</h2>
-    
-    <div class="row">
-        <div class="col-md-12 mb-3" th:each="order : ${orders}">
-            <div class="card shadow-sm p-3">
-                <h5>Order ID: #<span th:text="${order.id}"></span></h5>
-                <p><strong>Status:</strong> <span class="badge bg-secondary" th:text="${order.status}">PENDING</span></p>
-                
-                <!-- Action Buttons for the Kitchen -->
-                <div class="btn-group" role="group">
-                    <form th:action="@{/admin/orders/update-status}" method="post" class="me-2">
-                        <input type="hidden" name="orderId" th:value="${order.id}"/>
-                        <input type="hidden" name="status" value="ACCEPTED"/>
-                        <button type="submit" class="btn btn-primary btn-sm">Accept</button>
-                    </form>
-                    
-                    <form th:action="@{/admin/orders/update-status}" method="post" class="me-2">
-                        <input type="hidden" name="orderId" th:value="${order.id}"/>
-                        <input type="hidden" name="status" value="PREPARING"/>
-                        <button type="submit" class="btn btn-warning btn-sm">Start Preparing</button>
-                    </form>
-                    
-                    <form th:action="@{/admin/orders/update-status}" method="post" class="me-2">
-                        <input type="hidden" name="orderId" th:value="${order.id}"/>
-                        <input type="hidden" name="status" value="PREPARED"/>
-                        <button type="submit" class="btn btn-info btn-sm text-white">Food Prepared</button>
-                    </form>
-                    
-                    <form th:action="@{/admin/orders/update-status}" method="post">
-                        <input type="hidden" name="orderId" th:value="${order.id}"/>
-                        <input type="hidden" name="status" value="COMPLETED"/>
-                        <button type="submit" class="btn btn-success btn-sm">Complete</button>
-                    </form>
-                </div>
-            </div>
+
+<!-- ================= HEADER ================= -->
+
+<header class="top-header">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🍳
         </div>
+
+        <div class="brand-text">
+            <h2>Cloud Kitchen</h2>
+            <p>Kitchen Display System</p>
+        </div>
+
     </div>
+
+
+    <div class="admin-section">
+
+        <span class="online-dot"></span>
+
+        <span class="admin-text">
+            Admin Panel
+        </span>
+
+        <a href="/admin/logout" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</header>
+
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main-container">
+
+
+    <!-- PAGE HEADING -->
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>
+                🍽️ Kitchen Display System
+            </h1>
+
+            <p>
+                Manage and monitor customer orders in real-time
+            </p>
+
+        </div>
+
+
+        <div class="live-badge">
+
+            <span></span>
+
+            LIVE ORDERS
+
+        </div>
+
+    </div>
+
+
+
+    <!-- INFO BOX -->
+
+    <div class="info-box">
+
+        <div class="info-icon">
+            ⏱️
+        </div>
+
+        <div>
+
+            <strong>
+                Order updates in real-time
+            </strong>
+
+            <p>
+                Accept orders, start preparation and update the order status.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ORDERS -->
+
+    <div class="orders-container">
+
+
+        <div class="orders-title">
+
+            <span class="orders-icon">
+                📋
+            </span>
+
+            <h2>
+                Live Orders
+            </h2>
+
+        </div>
+
+
+
+        <!-- EXISTING THYMELEAF LOOP - NOT CHANGED -->
+
+        <div th:each="order : ${orders}" class="order-card">
+
+
+            <!-- ORDER TOP -->
+
+            <div class="order-top">
+
+                <div>
+
+                    <span class="order-label">
+                        ORDER ID
+                    </span>
+
+                    <span class="order-id">
+
+                        #<span th:text="${order.id}">
+                            1
+                        </span>
+
+                    </span>
+
+                </div>
+
+
+                <span class="status"
+                      th:text="${order.status}">
+
+                    PENDING
+
+                </span>
+
+            </div>
+
+
+
+            <!-- ORDER DETAILS -->
+
+            <div class="order-details">
+
+    <!-- CUSTOMER NAME -->
+    <div class="detail-item">
+
+        <span class="detail-label">
+            Customer
+        </span>
+
+        <span class="detail-value"
+              th:text="${order.customerName}">
+            Customer Name
+        </span>
+
+    </div>
+
+
+    <!-- FOOD ORDER -->
+    <div class="detail-item">
+
+        <span class="detail-label">
+            Food Ordered
+        </span>
+
+        <span class="detail-value"
+              th:text="${order.foodItems}">
+            Food Items
+        </span>
+
+    </div>
+
+
+    <!-- QUANTITY -->
+    <div class="detail-item">
+
+        <span class="detail-label">
+            Items
+        </span>
+
+        <span class="detail-value"
+              th:text="${order.items}">
+            1
+        </span>
+
+    </div>
+
+
+    <!-- TOTAL -->
+    <div class="detail-item">
+
+        <span class="detail-label">
+            Total
+        </span>
+
+        <span class="detail-value">
+            ₹<span th:text="${order.total}">0</span>
+        </span>
+
+    </div>
+
 </div>
+
+
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Order ID
+                    </span>
+
+                    <span class="detail-value">
+
+                        #<span th:text="${order.id}">
+                            1
+                        </span>
+
+                    </span>
+
+                </div>
+
+
+                
+                <div class="order-details">
+
+    <!-- CUSTOMER NAME -->
+    <div class="detail-item">
+
+        <span class="detail-label">
+            Customer
+        </span>
+
+        <span class="detail-value"
+              th:text="${order.customerName}">
+            Customer Name
+        </span>
+
+    </div>
+
+
+    <!-- FOOD ORDER -->
+    <div class="detail-item">
+
+        <span class="detail-label">
+            Food Ordered
+        </span>
+
+        <span class="detail-value"
+              th:text="${order.foodItems}">
+            Food Items
+        </span>
+
+    </div>
+
+
+    <!-- QUANTITY -->
+    <div class="detail-item">
+
+        <span class="detail-label">
+            Items
+        </span>
+
+        <span class="detail-value"
+              th:text="${order.items}">
+            1
+        </span>
+
+    </div>
+
+
+    <!-- TOTAL -->
+    <div class="detail-item">
+
+        <span class="detail-label">
+            Total
+        </span>
+
+        <span class="detail-value">
+            ₹<span th:text="${order.total}">0</span>
+        </span>
+
+    </div>
+
+</div>
+
+
+            <!-- ACTION BUTTONS -->
+
+            <div class="actions">
+
+
+                <!-- ACCEPT -->
+
+                <form th:action="@{/admin/orders/update-status}"
+                      method="post"
+                      class="action-form">
+
+                    <input type="hidden"
+                           name="orderId"
+                           th:value="${order.id}"/>
+
+                    <input type="hidden"
+                           name="status"
+                           value="ACCEPTED"/>
+
+                    <button type="submit"
+                            class="btn-action btn-accept">
+
+                        ✓ Accept
+
+                    </button>
+
+                </form>
+
+
+
+                <!-- PREPARING -->
+
+                <form th:action="@{/admin/orders/update-status}"
+                      method="post"
+                      class="action-form">
+
+                    <input type="hidden"
+                           name="orderId"
+                           th:value="${order.id}"/>
+
+                    <input type="hidden"
+                           name="status"
+                           value="PREPARING"/>
+
+                    <button type="submit"
+                            class="btn-action btn-preparing">
+
+                        🍳 Start Preparing
+
+                    </button>
+
+                </form>
+
+
+
+                <!-- PREPARED -->
+
+                <form th:action="@{/admin/orders/update-status}"
+                      method="post"
+                      class="action-form">
+
+                    <input type="hidden"
+                           name="orderId"
+                           th:value="${order.id}"/>
+
+                    <input type="hidden"
+                           name="status"
+                           value="PREPARED"/>
+
+                    <button type="submit"
+                            class="btn-action btn-prepared">
+
+                        ✓ Food Prepared
+
+                    </button>
+
+                </form>
+
+
+
+                <!-- COMPLETED -->
+
+                <form th:action="@{/admin/orders/update-status}"
+                      method="post"
+                      class="action-form">
+
+                    <input type="hidden"
+                           name="orderId"
+                           th:value="${order.id}"/>
+
+                    <input type="hidden"
+                           name="status"
+                           value="COMPLETED"/>
+
+                    <button type="submit"
+                            class="btn-action btn-complete">
+
+                        ✓ Complete
+
+                    </button>
+
+                </form>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        Cloud Kitchen • Kitchen Management System
+
+    </div>
+
+
+</main>
+
+
+</body>
+</html>
