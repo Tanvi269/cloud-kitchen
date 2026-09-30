@@ -749,6 +749,7 @@
     <!-- QUANTITY -->
     <div class="detail-item">
 
+        
         <span class="detail-label">
             Items
         </span>
@@ -779,117 +780,280 @@
 
             <!-- ACTION BUTTONS -->
 
-            <div class="actions">
+<div class="actions">
+
+    <!-- ACCEPT -->
+
+    <form th:action="@{/admin/orders/update-status}"
+          method="post"
+          class="action-form">
+
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
+
+        <input type="hidden"
+               name="status"
+               value="ACCEPTED"/>
+
+        <button type="submit"
+                class="btn-action btn-accept">
+
+            ✓ Accept
+
+        </button>
+
+    </form>
 
 
-                <!-- ACCEPT -->
+    <!-- START PREPARING -->
 
-                <form th:action="@{/admin/orders/update-status}"
-                      method="post"
-                      class="action-form">
+    <form th:action="@{/admin/orders/update-status}"
+          method="post"
+          class="action-form">
 
-                    <input type="hidden"
-                           name="orderId"
-                           th:value="${order.id}"/>
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
 
-                    <input type="hidden"
-                           name="status"
-                           value="ACCEPTED"/>
+        <input type="hidden"
+               name="status"
+               value="PREPARING"/>
 
-                    <button type="submit"
-                            class="btn-action btn-accept">
+        <button type="submit"
+                class="btn-action btn-preparing">
 
-                        ✓ Accept
+            🍳 Start Preparing
 
-                    </button>
+        </button>
 
-                </form>
-
-
-
-                <!-- PREPARING -->
-
-                <form th:action="@{/admin/orders/update-status}"
-                      method="post"
-                      class="action-form">
-
-                    <input type="hidden"
-                           name="orderId"
-                           th:value="${order.id}"/>
-
-                    <input type="hidden"
-                           name="status"
-                           value="PREPARING"/>
-
-                    <button type="submit"
-                            class="btn-action btn-preparing">
-
-                        🍳 Start Preparing
-
-                    </button>
-
-                </form>
+    </form>
 
 
+    
+    <!-- PREPARATION TIME -->
 
-                <!-- PREPARED -->
+    <div style="display:flex;
+            align-items:center;
+            gap:8px;
+            padding:0 5px;">
 
-                <form th:action="@{/admin/orders/update-status}"
-                      method="post"
-                      class="action-form">
+    <strong style="font-size:13px;">
+        Total: 30 min
+    </strong>
 
-                    <input type="hidden"
-                           name="orderId"
-                           th:value="${order.id}"/>
+    <form th:action="@{/admin/orders/update-remaining-time}"
+          method="post"
+          style="display:flex;
+                 align-items:center;
+                 gap:8px;">
 
-                    <input type="hidden"
-                           name="status"
-                           value="PREPARED"/>
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
 
-                    <button type="submit"
-                            class="btn-action btn-prepared">
+        <input type="number"
+               name="remainingTime"
+               min="0"
+               max="30"
+               th:value="${order.remainingTime}"
+               placeholder="Remaining"
+               style="width:90px;
+                      padding:9px;
+                      border:1px solid #ccc;
+                      border-radius:6px;">
 
-                        ✓ Food Prepared
+        <span style="font-size:12px;">
+            min
+        </span>
 
-                    </button>
+        <button type="submit"
+                class="btn-action"
+                style="background:#8b5cf6;">
+            ⏱️ Update
+        </button>
 
-                </form>
+    </form>
+
+</div>
+    <!-- PREPARED -->
+
+    <form th:action="@{/admin/orders/update-status}"
+          method="post"
+          class="action-form">
+
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
+
+        <input type="hidden"
+               name="status"
+               value="PREPARED"/>
+
+        <button type="submit"
+                class="btn-action btn-prepared">
+
+            ✓ Food Prepared
+
+        </button>
+
+    </form>
 
 
+    <!-- COMPLETED -->
 
-                <!-- COMPLETED -->
+    <form th:action="@{/admin/orders/update-status}"
+          method="post"
+          class="action-form">
 
-                <form th:action="@{/admin/orders/update-status}"
-                      method="post"
-                      class="action-form">
+        <input type="hidden"
+               name="orderId"
+               th:value="${order.id}"/>
 
-                    <input type="hidden"
-                           name="orderId"
-                           th:value="${order.id}"/>
+        <input type="hidden"
+               name="status"
+               value="COMPLETED"/>
 
-                    <input type="hidden"
-                           name="status"
-                           value="COMPLETED"/>
+        <button type="submit"
+                class="btn-action btn-complete">
 
-                    <button type="submit"
-                            class="btn-action btn-complete">
+            ✓ Complete
 
-                        ✓ Complete
+        </button>
 
-                    </button>
+    </form>
 
-                </form>
+</div>
 
+<!-- ================= FOOD AVAILABILITY ================= -->
 
+<div class="orders-container" style="margin-top: 25px;">
+
+    <div class="orders-title">
+        <span class="orders-icon">🍔</span>
+        <h2>Food Availability</h2>
+    </div>
+
+    <div th:each="food : ${foodItems}" class="order-card">
+
+        <div class="order-top">
+
+            <div>
+                <span class="order-label">FOOD ITEM</span>
+
+                <span class="order-id"
+                      th:text="${food.name}">
+                    Burger
+                </span>
             </div>
 
+            <span class="status"
+                  th:text="${food.available ? 'AVAILABLE' : 'OUT OF STOCK'}"
+                  th:style="${food.available ? 'background:#dcfce7;color:#15803d;' : 'background:#fee2e2;color:#dc2626;'}">
+                AVAILABLE
+            </span>
 
         </div>
 
+        <div class="order-details">
+
+            <div class="detail-item">
+
+                <span class="detail-label">
+                    Category
+                </span>
+
+                <span class="detail-value"
+                      th:text="${food.category}">
+                    Category
+                </span>
+
+            </div>
+
+            <div class="detail-item">
+
+                <span class="detail-label">
+                    Price
+                </span>
+
+                <span class="detail-value">
+                    ₹<span th:text="${food.price}">0</span>
+                </span>
+
+            </div>
+
+            <div class="detail-item">
+
+                <span class="detail-label">
+                    Status
+                </span>
+
+                <span class="detail-value"
+                      th:text="${food.available ? 'Available' : 'Out of Stock'}">
+                    Available
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="actions">
+
+            <!-- MARK OUT OF STOCK -->
+
+            <form th:if="${food.available}"
+                  th:action="@{/admin/food/update-availability}"
+                  method="post"
+                  class="action-form">
+
+                <input type="hidden"
+                       name="foodId"
+                       th:value="${food.id}">
+
+                <input type="hidden"
+                       name="available"
+                       value="false">
+
+                <button type="submit"
+                        class="btn-action"
+                        style="background:#ef4444;">
+
+                    ✕ Mark Out of Stock
+
+                </button>
+
+            </form>
+
+
+            <!-- MARK AVAILABLE -->
+
+            <form th:unless="${food.available}"
+                  th:action="@{/admin/food/update-availability}"
+                  method="post"
+                  class="action-form">
+
+                <input type="hidden"
+                       name="foodId"
+                       th:value="${food.id}">
+
+                <input type="hidden"
+                       name="available"
+                       value="true">
+
+                <button type="submit"
+                        class="btn-action btn-accept">
+
+                    ✓ Mark Available
+
+                </button>
+
+            </form>
+
+        </div>
 
     </div>
 
-
+</div>
 
     <!-- FOOTER -->
 
@@ -902,6 +1066,52 @@
 
 </main>
 
+<script>
 
-</body>
-</html>
+<script>
+
+function updateRemainingTime(orderId) {
+
+    const input =
+        document.getElementById("remainingTime-" + orderId);
+
+    const remainingTime = input.value;
+
+    if (remainingTime === "") {
+        alert("Please enter remaining time");
+        return;
+    }
+
+    fetch("/admin/orders/update-remaining-time", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+
+        body:
+            "orderId=" + orderId +
+            "&remainingTime=" + remainingTime
+
+    })
+    .then(response => {
+
+        if (response.ok) {
+            location.reload();
+        } else {
+            alert("Unable to update remaining time");
+        }
+
+    })
+    .catch(error => {
+
+        console.error(error);
+
+        alert("Error updating remaining time");
+
+    });
+
+}
+
+</script>

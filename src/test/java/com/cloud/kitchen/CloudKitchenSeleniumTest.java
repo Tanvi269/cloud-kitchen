@@ -15,7 +15,7 @@ public class CloudKitchenSeleniumTest {
         WebDriver driver = new ChromeDriver();
 
         try {
-            driver.get("http://localhost:8082/cloud-kitchen/");
+            driver.get("http://localhost:9090/cloud-kitchen/");
             driver.manage().window().maximize();
 
             // Add Chicken Biryani
@@ -44,7 +44,7 @@ public class CloudKitchenSeleniumTest {
         WebDriver driver = new ChromeDriver();
 
         try {
-            driver.get("http://localhost:8082/cloud-kitchen/");
+            driver.get("http://localhost:9090/cloud-kitchen/");
             driver.manage().window().maximize();
 
             // Add Pizza

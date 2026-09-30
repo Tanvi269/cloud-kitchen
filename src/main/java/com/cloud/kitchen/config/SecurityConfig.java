@@ -50,6 +50,9 @@ public class SecurityConfig {
                 // Customer can place orders
                 .requestMatchers("/api/orders").permitAll()
 
+                // Customer can view menu
+                .requestMatchers("/api/menu", "/api/menu/**").permitAll()
+
                 // Admin status update
                 .requestMatchers("/api/orders/*/status").permitAll()
 

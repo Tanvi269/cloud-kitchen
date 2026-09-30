@@ -50,9 +50,14 @@ public class OrderApiController {
             Order order = orderRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Order not found"));
 
-            order.setStatus(status);
+           order.setStatus(status);
 
-            Order updatedOrder = orderRepository.save(order);
+// Start preparation timer when admin clicks Start Preparing
+if ("PREPARING".equalsIgnoreCase(status)) {
+    order.setOrderStartTime(System.currentTimeMillis());
+}
+
+Order updatedOrder = orderRepository.save(order);
 
             return ResponseEntity.ok(updatedOrder);
 

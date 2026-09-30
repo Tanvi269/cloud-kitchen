@@ -4,331 +4,1323 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud Kitchen - Customer Portal</title>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background: #f8f8f8; color: #222; }
-        nav { background: #222; color: white; padding: 18px 7%; display: flex; justify-content: space-between; align-items: center; }
-        nav h1 { font-size: 25px; }
-        .hero { text-align: center; padding: 55px 20px; background: #fff3e6; }
-        .hero h2 { font-size: 38px; margin-bottom: 12px; }
-        .hero p { font-size: 18px; color: #666; }
-        .menu { padding: 40px 7%; }
-        .menu h2 { text-align: center; margin-bottom: 30px; font-size: 30px; }
-        .food-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
-        .food-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .food-card img { width: 100%; height: 210px; object-fit: cover; }
-        .food-info { padding: 18px; }
-        .food-info h3 { margin-bottom: 8px; }
-        .food-info p { color: #666; margin-bottom: 12px; }
-        .price { font-weight: bold; font-size: 18px; }
-        button { margin-top: 12px; width: 100%; padding: 10px; border: none; border-radius: 6px; background: #222; color: white; cursor: pointer; font-size: 15px; }
-        button:hover { background: #444; }
-        footer { text-align: center; padding: 25px; background: #222; color: white; margin-top: 30px; }
-        .checkout-section, .cart-section, .status-section { background: white; margin: 40px 7%; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .checkout-section input, .checkout-section textarea, .checkout-section select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; margin-top: 6px; margin-bottom: 15px; }
-        .checkout-section textarea { height: 100px; resize: vertical; }
-        @media (max-width: 800px) { .food-container { grid-template-columns: 1fr; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f8f8f8;
+            color: #222;
+        }
+
+        nav {
+            background: #222;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 {
+            font-size: 25px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 55px 20px;
+            background: #fff3e6;
+        }
+
+        .hero h2 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #666;
+        }
+
+        .menu {
+            padding: 40px 7%;
+        }
+
+        .menu h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 30px;
+        }
+
+        .food-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .food-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .food-card img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+        }
+
+        .food-info {
+            padding: 18px;
+        }
+
+        .food-info h3 {
+            margin-bottom: 8px;
+        }
+
+        .food-info p {
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .price {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        button {
+            margin-top: 12px;
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #222;
+            color: white;
+            margin-top: 30px;
+        }
+
+        .checkout-section,
+        .cart-section,
+        .status-section {
+            background: white;
+            margin: 40px 7%;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .checkout-section input,
+        .checkout-section textarea,
+        .checkout-section select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            margin-top: 6px;
+            margin-bottom: 15px;
+        }
+
+        .checkout-section textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        /* OUT OF STOCK */
+        .out-of-stock {
+            opacity: 0.6;
+        }
+
+        .out-of-stock button {
+            background: #dc3545;
+            cursor: not-allowed;
+        }
+
+        /* PREPARATION TIME */
+        .remaining-time {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff3cd;
+            border: 1px solid #ffe69c;
+            border-radius: 8px;
+            font-weight: bold;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        @media (max-width: 800px) {
+            .food-container {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
+
 <body>
 
 <nav>
     <h1>🍴 Cloud Kitchen</h1>
-    <div><span id="cart">🛒 Cart: 0</span></div>
+
+    <div>
+        <span id="cart">🛒 Cart: 0</span>
+    </div>
 </nav>
 
+
 <section class="hero">
+
     <h2>Delicious Food, Delivered Fresh</h2>
-    <p>Order your favourite meals from Cloud Kitchen</p>
+
+    <p>
+        Order your favourite meals from Cloud Kitchen
+    </p>
+
 </section>
 
-<!-- Customer Live Order Status Tracker -->
+
+<!-- CUSTOMER LIVE ORDER STATUS -->
+
 <section class="status-section">
+
     <h2>📋 Your Live Order Status</h2>
+
     <div id="customerLiveStatus">
+
         <p>No active orders found.</p>
+
     </div>
+
 </section>
+
 
 <section class="menu">
+
     <h2>Our Menu</h2>
+
+
     <div style="text-align: center; margin: 25px;">
-        <input type="text" id="foodSearch" placeholder="🔍 Search food..." onkeyup="searchFood()" style="width: 300px; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px;">
+
+        <input
+            type="text"
+            id="foodSearch"
+            placeholder="🔍 Search food..."
+            onkeyup="searchFood()"
+            style="
+                width: 300px;
+                padding: 12px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                font-size: 16px;
+            "
+        >
+
     </div>
+
+
     <div class="food-container">
+
+
+        <!-- CHICKEN BIRYANI -->
+
         <div class="food-card">
-            <img src="images/biryani.png" alt="Chicken Biryani">
+
+            <img
+                src="images/biryani.png"
+                alt="Chicken Biryani"
+            >
+
             <div class="food-info">
+
                 <h3>Chicken Biryani</h3>
-                <p>Fragrant rice with delicious chicken.</p>
-                <span class="price">₹220</span>
-                <button onclick="addToCart('Chicken Biryani', 220)">Add to Cart</button>
+
+                <p>
+                    Fragrant rice with delicious chicken.
+                </p>
+
+                <span class="price">
+                    ₹220
+                </span>
+
+                <button
+                    onclick="addToCart('Chicken Biryani', 220)"
+                >
+                    Add to Cart
+                </button>
+
             </div>
+
         </div>
+
+
+        <!-- PIZZA -->
+
         <div class="food-card">
-            <img src="images/pizza.png" alt="Pizza">
+
+            <img
+                src="images/pizza.png"
+                alt="Pizza"
+            >
+
             <div class="food-info">
+
                 <h3>Pizza</h3>
-                <p>Freshly baked cheesy pizza.</p>
-                <span class="price">₹250</span>
-                <button onclick="addToCart('Pizza', 250)">Add to Cart</button>
+
+                <p>
+                    Freshly baked cheesy pizza.
+                </p>
+
+                <span class="price">
+                    ₹250
+                </span>
+
+                <button
+                    onclick="addToCart('Pizza', 250)"
+                >
+                    Add to Cart
+                </button>
+
             </div>
+
         </div>
+
+
+        <!-- BURGER -->
+
         <div class="food-card">
-            <img src="images/burger.png" alt="Burger">
+
+            <img
+                src="images/burger.png"
+                alt="Burger"
+            >
+
             <div class="food-info">
+
                 <h3>Classic Burger</h3>
-                <p>Juicy burger with fresh vegetables.</p>
-                <span class="price">₹150</span>
-                <button onclick="addToCart('Classic Burger', 150)">Add to Cart</button>
+
+                <p>
+                    Juicy burger with fresh vegetables.
+                </p>
+
+                <span class="price">
+                    ₹150
+                </span>
+
+                <button
+                    onclick="addToCart('Classic Burger', 150)"
+                >
+                    Add to Cart
+                </button>
+
             </div>
+
         </div>
+
+
+        <!-- PASTA -->
+
         <div class="food-card">
-            <img src="images/pasta.png" alt="Pasta">
+
+            <img
+                src="images/pasta.png"
+                alt="Pasta"
+            >
+
             <div class="food-info">
+
                 <h3>Italian Pasta</h3>
-                <p>Creamy and delicious pasta.</p>
-                <span class="price">₹180</span>
-                <button onclick="addToCart('Italian Pasta', 180)">Add to Cart</button>
+
+                <p>
+                    Creamy and delicious pasta.
+                </p>
+
+                <span class="price">
+                    ₹180
+                </span>
+
+                <button
+                    onclick="addToCart('Italian Pasta', 180)"
+                >
+                    Add to Cart
+                </button>
+
             </div>
+
         </div>
+
+
+        <!-- FRIED RICE -->
+
         <div class="food-card">
-            <img src="images/fried-rice.png" alt="Fried Rice">
+
+            <img
+                src="images/fried-rice.png"
+                alt="Fried Rice"
+            >
+
             <div class="food-info">
+
                 <h3>Fried Rice</h3>
-                <p>Fresh vegetables tossed with rice.</p>
-                <span class="price">₹160</span>
-                <button onclick="addToCart('Fried Rice', 160)">Add to Cart</button>
+
+                <p>
+                    Fresh vegetables tossed with rice.
+                </p>
+
+                <span class="price">
+                    ₹160
+                </span>
+
+                <button
+                    onclick="addToCart('Fried Rice', 160)"
+                >
+                    Add to Cart
+                </button>
+
             </div>
+
         </div>
+
+
+        <!-- PANEER TIKKA -->
+
         <div class="food-card">
-            <img src="images/paneer-tikka.png" alt="Paneer Tikka">
+
+            <img
+                src="images/paneer-tikka.png"
+                alt="Paneer Tikka"
+            >
+
             <div class="food-info">
+
                 <h3>Paneer Tikka</h3>
-                <p>Soft paneer with delicious spices.</p>
-                <span class="price">₹190</span>
-                <button onclick="addToCart('Paneer Tikka', 190)">Add to Cart</button>
+
+                <p>
+                    Soft paneer with delicious spices.
+                </p>
+
+                <span class="price">
+                    ₹190
+                </span>
+
+                <button
+                    onclick="addToCart('Paneer Tikka', 190)"
+                >
+                    Add to Cart
+                </button>
+
             </div>
+
         </div>
+
+
     </div>
+
 </section>
+
+
+<!-- CART -->
 
 <section class="cart-section">
+
     <h2>Your Cart 🛒</h2>
-    <div id="cartItems"><p>Your cart is empty.</p></div>
-    <h3 id="cartTotal">Total: ₹0</h3>
-    <button onclick="showCheckout()">Proceed to Checkout</button>
+
+    <div id="cartItems">
+
+        <p>
+            Your cart is empty.
+        </p>
+
+    </div>
+
+    <h3 id="cartTotal">
+        Total: ₹0
+    </h3>
+
+    <button onclick="showCheckout()">
+        Proceed to Checkout
+    </button>
+
 </section>
 
-<section id="checkout" class="checkout-section" style="display: none;">
+
+<!-- CHECKOUT -->
+
+<section
+    id="checkout"
+    class="checkout-section"
+    style="display: none;"
+>
+
     <h2>Checkout 🧾</h2>
+
+
     <label>Full Name</label>
-    <input type="text" id="customerName" placeholder="Enter your name" required>
+
+    <input
+        type="text"
+        id="customerName"
+        placeholder="Enter your name"
+        required
+    >
+
+
     <label>Phone Number</label>
-    <input type="tel" id="customerPhone" placeholder="Enter phone number" required>
+
+    <input
+        type="tel"
+        id="customerPhone"
+        placeholder="Enter phone number"
+        required
+    >
+
+
     <label>Delivery Address</label>
-    <textarea id="customerAddress" placeholder="Enter your delivery address" required></textarea>
+
+    <textarea
+        id="customerAddress"
+        placeholder="Enter your delivery address"
+        required
+    ></textarea>
+
+
     <label>Payment Method</label>
+
     <select id="paymentMethod">
-        <option value="COD">Cash on Delivery</option>
-        <option value="UPI">UPI</option>
+
+        <option value="COD">
+            Cash on Delivery
+        </option>
+
+        <option value="UPI">
+            UPI
+        </option>
+
     </select>
-    <button type="button" onclick="placeOrder()">Confirm Order</button>
+
+
+    <button
+        type="button"
+        onclick="placeOrder()"
+    >
+        Confirm Order
+    </button>
+
 </section>
+
 
 <footer>
-    <p>© 2026 Cloud Kitchen | Fresh Food, Happy Customers</p>
+
+    <p>
+        © 2026 Cloud Kitchen | Fresh Food, Happy Customers
+    </p>
+
 </footer>
 
+
 <script>
+
 let cart = [];
 
-// ADD THE SEARCH FUNCTION HERE:
+
+/* =========================
+   SEARCH FOOD
+========================= */
+
 function searchFood() {
-    let input = document.getElementById('foodSearch').value.toLowerCase();
-    let cards = document.getElementsByClassName('food-card');
+
+    let input =
+        document
+            .getElementById('foodSearch')
+            .value
+            .toLowerCase();
+
+
+    let cards =
+        document.getElementsByClassName('food-card');
+
+
     for (let i = 0; i < cards.length; i++) {
-        let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+
+        let title =
+            cards[i]
+                .getElementsByTagName('h3')[0]
+                .innerText
+                .toLowerCase();
+
+
         if (title.includes(input)) {
+
             cards[i].style.display = "";
+
         } else {
+
             cards[i].style.display = "none";
+
         }
+
     }
+
 }
 
+
+/* =========================
+   PAGE LOAD
+========================= */
+
 window.onload = function() {
+
     loadCustomerStatus();
+
+    loadFoodAvailability();
+
 };
 
-// ... rest of your existing functions (loadCustomerStatus, addToCart, etc.)
 
-window.onload = function() {
-    loadCustomerStatus();
-};
+/* =========================
+   CUSTOMER LIVE ORDER STATUS
+========================= */
 
 async function loadCustomerStatus() {
-    let container = document.getElementById("customerLiveStatus");
+
+    let container =
+        document.getElementById("customerLiveStatus");
+
+
     if (!container) return;
 
+
     try {
-        const response = await fetch('/api/orders');
+
+        const response =
+            await fetch('/api/orders');
+
 
         if (!response.ok) {
-            throw new Error("Failed to load orders");
+
+            throw new Error(
+                "Failed to load orders"
+            );
+
         }
 
-        const orders = await response.json();
+
+        const orders =
+            await response.json();
+
 
         if (orders.length === 0) {
-            container.innerHTML = "<p>No active orders found.</p>";
+
+            container.innerHTML =
+                "<p>No active orders found.</p>";
+
+            return;
+
+        }
+
+
+        // Show latest order
+
+        let latest =
+            orders[orders.length - 1];
+
+
+        /* =========================
+           PREPARATION TIME
+        ========================= */
+
+        let preparationInfo = "";
+
+
+        /*
+         * Total time is FIXED at 30 minutes.
+         *
+         * Remaining time comes from
+         * the value updated by admin.
+         *
+         * There is NO automatic countdown.
+         */
+
+        if (
+            latest.status &&
+            latest.status.toUpperCase() === "PREPARING"
+        ) {
+
+            let remainingTime =
+                latest.remainingTime ?? 30;
+
+
+            preparationInfo = `
+
+                <div class="remaining-time">
+
+                    🍳 Total Preparation Time:
+                    30 minutes
+
+                    <br>
+
+                    ⏱️ Remaining Time:
+                    ${remainingTime} minutes
+
+                </div>
+
+            `;
+
+        }
+
+
+        container.innerHTML = `
+
+            <p>
+
+                <strong>Order ID:</strong>
+                #${latest.id}
+
+            </p>
+
+
+            <p>
+
+                <strong>Items:</strong>
+                ${latest.foodItems || 'N/A'}
+
+            </p>
+
+
+            <p>
+
+                <strong>Total:</strong>
+                ₹${latest.total || 0}
+
+            </p>
+
+
+            <p>
+
+                <strong>Status:</strong>
+
+                <span
+                    style="
+                        color: #0d6efd;
+                        font-weight: bold;
+                    "
+                >
+
+                    ${latest.status || 'CONFIRMED'}
+
+                </span>
+
+            </p>
+
+
+            ${preparationInfo}
+
+        `;
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Error loading customer status:",
+            error
+        );
+
+    }
+
+}
+
+
+/* Refresh order status every 4 seconds */
+
+setInterval(
+    loadCustomerStatus,
+    4000
+);
+
+
+/* =========================
+   FOOD AVAILABILITY
+========================= */
+
+async function loadFoodAvailability() {
+
+    try {
+        const response = await fetch("/api/menu");
+
+        if (!response.ok) {
+            console.log("Menu API error:", response.status);
             return;
         }
 
-        // Show latest order
-        let latest = orders[orders.length - 1];
+        const foodItems = await response.json();
 
-        container.innerHTML = `
-            <p><strong>Order ID:</strong> #${latest.id}</p>
-            <p><strong>Items:</strong> ${latest.foodItems || 'N/A'}</p>
-            <p><strong>Total:</strong> ₹${latest.total || 0}</p>
-            <p><strong>Status:</strong>
-                <span style="color: #0d6efd; font-weight: bold;">
-                    ${latest.status || 'CONFIRMED'}
-                </span>
-            </p>
-        `;
+        console.log("Food availability:", foodItems);
+
+        const cards = document.querySelectorAll(".food-card");
+
+        cards.forEach(card => {
+
+            const nameElement = card.querySelector("h3");
+
+            if (!nameElement) return;
+
+            const foodName = nameElement.innerText.trim();
+
+            const food = foodItems.find(item =>
+                item.name &&
+                item.name.trim().toLowerCase() ===
+                foodName.toLowerCase()
+            );
+
+            if (!food) {
+                console.log("Food not found in database:", foodName);
+                return;
+            }
+
+            console.log(
+                foodName,
+                "available =",
+                food.available
+            );
+
+            if (food.available === false) {
+
+                card.classList.add("out-of-stock");
+
+                const button = card.querySelector("button");
+
+                if (button) {
+                    button.disabled = true;
+                    button.innerText = "Out of Stock";
+                    button.style.background = "#dc3545";
+                    button.style.cursor = "not-allowed";
+                }
+
+                const message = document.createElement("p");
+
+                message.innerText = "🔴 Currently Unavailable";
+                message.style.color = "#dc3545";
+                message.style.fontWeight = "bold";
+                message.style.marginTop = "10px";
+
+                card.querySelector(".food-info")
+                    .appendChild(message);
+            }
+
+        });
 
     } catch (error) {
-        console.error("Error loading customer status:", error);
-    }
-}
-setInterval(loadCustomerStatus, 4000);
 
-function addToCart(name, price) {
-    let existing = cart.find(item => item.name === name);
-    if (existing) {
-        existing.quantity += 1;
-    } else {
-        cart.push({ name: name, price: price, quantity: 1 });
+        console.error(
+            "Food availability error:",
+            error
+        );
+
     }
-    updateCart();
 }
+
+    
+
+
+/* =========================
+   ADD TO CART
+========================= */
+
+function addToCart(
+    name,
+    price
+) {
+
+    let existing =
+        cart.find(
+            item =>
+                item.name === name
+        );
+
+
+    if (existing) {
+
+        existing.quantity += 1;
+
+    }
+
+    else {
+
+        cart.push({
+
+            name: name,
+
+            price: price,
+
+            quantity: 1
+
+        });
+
+    }
+
+
+    updateCart();
+
+}
+
+
+/* =========================
+   UPDATE CART
+========================= */
 
 function updateCart() {
-    let cartContainer = document.getElementById("cartItems");
-    let cartCountSpan = document.getElementById("cart");
-    let cartTotalHeader = document.getElementById("cartTotal");
+
+    let cartContainer =
+        document.getElementById(
+            "cartItems"
+        );
+
+
+    let cartCountSpan =
+        document.getElementById(
+            "cart"
+        );
+
+
+    let cartTotalHeader =
+        document.getElementById(
+            "cartTotal"
+        );
+
 
     if (cart.length === 0) {
-        cartContainer.innerHTML = "<p>Your cart is empty.</p>";
-        cartCountSpan.innerText = "🛒 Cart: 0";
-        cartTotalHeader.innerText = "Total: ₹0";
+
+        cartContainer.innerHTML =
+            "<p>Your cart is empty.</p>";
+
+
+        cartCountSpan.innerText =
+            "🛒 Cart: 0";
+
+
+        cartTotalHeader.innerText =
+            "Total: ₹0";
+
+
         return;
+
     }
+
 
     let totalItems = 0;
+
     let totalPrice = 0;
+
+
     cartContainer.innerHTML = "";
 
-    cart.forEach((item, index) => {
-        totalItems += item.quantity;
-        totalPrice += item.price * item.quantity;
-        let div = document.createElement("div");
-        div.style.cssText = "display: flex; justify-content: space-between; margin: 10px 0; align-items: center;";
-        div.innerHTML = `
-            <span>${item.name} (₹${item.price} x ${item.quantity})</span>
-            <button onclick="removeFromCart(${index})" style="width: auto; padding: 4px 8px; background: #dc3545; margin:0;">Remove</button>
-        `;
-        cartContainer.appendChild(div);
-    });
 
-    cartCountSpan.innerText = `🛒 Cart: ${totalItems}`;
-    cartTotalHeader.innerText = `Total: ₹${totalPrice}`;
+    cart.forEach(
+        (item, index) => {
+
+            totalItems +=
+                item.quantity;
+
+
+            totalPrice +=
+                item.price *
+                item.quantity;
+
+
+            let div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.style.cssText =
+                "display: flex; justify-content: space-between; margin: 10px 0; align-items: center;";
+
+
+            div.innerHTML = `
+
+                <span>
+
+                    ${item.name}
+
+                    (₹${item.price} x
+                    ${item.quantity})
+
+                </span>
+
+
+                <button
+
+                    onclick="removeFromCart(${index})"
+
+                    style="
+                        width: auto;
+                        padding: 4px 8px;
+                        background: #dc3545;
+                        margin:0;
+                    "
+                >
+
+                    Remove
+
+                </button>
+
+            `;
+
+
+            cartContainer.appendChild(
+                div
+            );
+
+        }
+    );
+
+
+    cartCountSpan.innerText =
+        `🛒 Cart: ${totalItems}`;
+
+
+    cartTotalHeader.innerText =
+        `Total: ₹${totalPrice}`;
+
 }
+
+
+/* =========================
+   REMOVE FROM CART
+========================= */
 
 function removeFromCart(index) {
-    cart.splice(index, 1);
+
+    cart.splice(
+        index,
+        1
+    );
+
+
     updateCart();
+
 }
+
+
+/* =========================
+   SHOW CHECKOUT
+========================= */
 
 function showCheckout() {
+
     if (cart.length === 0) {
-        alert("Your cart is empty!");
+
+        alert(
+            "Your cart is empty!"
+        );
+
         return;
+
     }
-    document.getElementById("checkout").style.display = "block";
-    window.scrollTo({ top: document.getElementById("checkout").offsetTop, behavior: 'smooth' });
+
+
+    document.getElementById(
+        "checkout"
+    ).style.display = "block";
+
+
+    window.scrollTo({
+
+        top:
+            document
+                .getElementById(
+                    "checkout"
+                )
+                .offsetTop,
+
+        behavior: 'smooth'
+
+    });
+
 }
+
+
+/* =========================
+   PLACE ORDER
+========================= */
 
 function placeOrder() {
+
     if (cart.length === 0) {
-        alert("Your cart is empty!");
+
+        alert(
+            "Your cart is empty!"
+        );
+
         return;
+
     }
 
-    const name = document.getElementById("customerName").value;
-    const phone = document.getElementById("customerPhone").value;
-    const address = document.getElementById("customerAddress").value;
-    const payment = document.getElementById("paymentMethod").value;
 
-    if (!name || !phone || !address) {
-    alert("Please fill in all checkout fields.");
-    return;
-}
+    const name =
+        document.getElementById(
+            "customerName"
+        ).value;
 
 
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    const foodItemsStr = cart.map(item =>
-    `${item.name} x ${item.quantity} @ ₹${item.price} = ₹${item.price * item.quantity}`
-).join(", ");
+    const phone =
+        document.getElementById(
+            "customerPhone"
+        ).value;
+
+
+    const address =
+        document.getElementById(
+            "customerAddress"
+        ).value;
+
+
+    const payment =
+        document.getElementById(
+            "paymentMethod"
+        ).value;
+
+
+    if (
+        !name ||
+        !phone ||
+        !address
+    ) {
+
+        alert(
+            "Please fill in all checkout fields."
+        );
+
+        return;
+
+    }
+
+
+    const total =
+        cart.reduce(
+
+            (sum, item) =>
+
+                sum +
+                (
+                    item.price *
+                    item.quantity
+                ),
+
+            0
+
+        );
+
+
+    const totalItems =
+        cart.reduce(
+
+            (sum, item) =>
+
+                sum +
+                item.quantity,
+
+            0
+
+        );
+
+
+    const foodItemsStr =
+        cart.map(
+
+            item =>
+
+                `${item.name} x ${item.quantity} @ ₹${item.price} = ₹${item.price * item.quantity}`
+
+        ).join(", ");
+
 
     const orderData = {
-        customerName: name,
-        phoneNumber: phone,
-        deliveryAddress: address,
-        paymentMethod: payment,
-        items: totalItems,
-        total: total,
-        status: "CONFIRMED",
-        foodItems: foodItemsStr
+
+        customerName:
+            name,
+
+        phoneNumber:
+            phone,
+
+        deliveryAddress:
+            address,
+
+        paymentMethod:
+            payment,
+
+        items:
+            totalItems,
+
+        total:
+            total,
+
+        status:
+            "CONFIRMED",
+
+        foodItems:
+            foodItemsStr
+
     };
 
-   fetch('/api/orders', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(orderData)
-})
 
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Failed to save order to server');
+    fetch(
+        '/api/orders',
+        {
+
+            method: 'POST',
+
+            headers: {
+
+                'Content-Type':
+                    'application/json'
+
+            },
+
+            body:
+                JSON.stringify(
+                    orderData
+                )
+
         }
-        return response.json();
-    })
-    .then(data => {
-        alert("🎉 ORDER CONFIRMED & SENT TO KITCHEN!");
-        cart = [];
-        updateCart();
-        document.getElementById("checkout").style.display = "none";
-        
-        // Optionally update local tracker view using the server-assigned ID/data
-        let orders = JSON.parse(localStorage.getItem("cloudKitchenOrders")) || [];
-        orders.push(data);
-        localStorage.setItem("cloudKitchenOrders", JSON.stringify(orders));
-        loadCustomerStatus();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("Error submitting order: " + error.message); // This will show the actual message
-    });
+    )
+
+
+    .then(
+        response => {
+
+            if (!response.ok) {
+
+                throw new Error(
+                    'Failed to save order to server'
+                );
+
+            }
+
+
+            return response.json();
+
+        }
+    )
+
+
+    .then(
+        data => {
+
+            alert(
+                "🎉 ORDER CONFIRMED & SENT TO KITCHEN!"
+            );
+
+
+            cart = [];
+
+
+            updateCart();
+
+
+            document.getElementById(
+                "checkout"
+            ).style.display = "none";
+
+
+            let orders =
+
+                JSON.parse(
+
+                    localStorage.getItem(
+                        "cloudKitchenOrders"
+                    )
+
+                ) || [];
+
+
+            orders.push(
+                data
+            );
+
+
+            localStorage.setItem(
+
+                "cloudKitchenOrders",
+
+                JSON.stringify(
+                    orders
+                )
+
+            );
+
+
+            loadCustomerStatus();
+
+        }
+    )
+
+
+    .catch(
+        error => {
+
+            console.error(
+                'Error:',
+                error
+            );
+
+
+            alert(
+                "Error submitting order: " +
+                error.message
+            );
+
+        }
+    );
+
 }
+
 </script>
-<a href="/admin-login.html" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background-color: #d90429; color: #ffffff; padding: 15px 25px; font-size: 1.5rem; font-weight: bold; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+
+
+<!-- ADMIN LOGIN -->
+
+<a
+    href="/admin-login.html"
+
+    style="
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        background-color: #d90429;
+        color: #ffffff;
+        padding: 15px 25px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        border-radius: 8px;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    "
+>
     Admin Login
 </a>
+
+
 </body>
 </html>
