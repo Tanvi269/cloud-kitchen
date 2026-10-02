@@ -83,7 +83,6 @@ The system ensures:
 | **ORM** | Spring Data JPA / Hibernate |
 | **Frontend** | HTML5, Vanilla CSS, Vanilla JS |
 | **Build Tool** | Maven |
-| **Deployment** | Railway (with GitHub Actions) |
 
 ---
 
@@ -187,19 +186,7 @@ mvn spring-boot:run
 
 ---
 
-## ☁️ Deployment
 
-This project is configured for **Railway** deployment.
-
-### Quick Deploy Steps:
-1. Fork this repository
-2. Create a [Railway](https://railway.app) account (login with GitHub)
-3. Click **New Project → Deploy from GitHub Repo**
-4. Add a **PostgreSQL** plugin to your project
-5. Set environment variable: `SPRING_PROFILES_ACTIVE=prod`
-6. Railway auto-builds and gives you a live URL! 🎉
-
----
 
 ## 🔐 Admin Credentials
 
