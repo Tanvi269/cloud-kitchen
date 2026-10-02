@@ -29,14 +29,11 @@ public class AdminController {
     private FoodItemRepository foodItemRepository;
 
 
-    @GetMapping("/admin")
-    public String adminRoot() {
-        return "redirect:/admin-login.html";
-    }
-
-
-    @GetMapping("/admin/portal-login")
-    public String adminLogin() {
+    @GetMapping({"/admin", "/admin.html", "/admin/portal-login"})
+    public String adminRoot(HttpSession session) {
+        if (session != null && session.getAttribute("admin") != null) {
+            return "redirect:/admin/dashboard";
+        }
         return "redirect:/admin-login.html";
     }
 

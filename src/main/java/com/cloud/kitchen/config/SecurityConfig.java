@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -15,9 +15,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    // Using NoOpPasswordEncoder so passwords are stored and compared as plain text.
+    // For production, switch to BCryptPasswordEncoder and hash passwords on register.
+    @SuppressWarnings("deprecation")
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
@@ -28,33 +31,28 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
+                // Static pages
                 .requestMatchers(
                     "/",
                     "/index.html",
+                    "/admin.html",
                     "/admin-login.html",
                     "/images/**",
                     "/css/**",
                     "/js/**"
                 ).permitAll()
 
-                // Allow all admin URLs
+                // Admin controller URLs
                 .requestMatchers("/admin/**").permitAll()
 
-                // Custom login APIs
-                .requestMatchers(
-                    "/api/auth/login",
-                    "/api/auth/logout",
-                    "/api/auth/check"
-                ).permitAll()
+                // Customer auth APIs (register, login, logout, status)
+                .requestMatchers("/api/customer/**").permitAll()
 
-                // Customer can place orders
-                .requestMatchers("/api/orders").permitAll()
+                // Customer can place and view orders
+                .requestMatchers("/api/orders", "/api/orders/**").permitAll()
 
                 // Customer can view menu
                 .requestMatchers("/api/menu", "/api/menu/**").permitAll()
-
-                // Admin status update
-                .requestMatchers("/api/orders/*/status").permitAll()
 
                 // H2 console
                 .requestMatchers("/h2-console/**").permitAll()

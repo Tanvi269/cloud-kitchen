@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -17,14 +19,29 @@ public class OrderApiController {
     private OrderRepository orderRepository;
 
     @GetMapping
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public ResponseEntity<List<Order>> getAllOrders(HttpSession session) {
+        com.cloud.kitchen.model.User user = (com.cloud.kitchen.model.User) session.getAttribute("user");
+        if (user != null) {
+            return ResponseEntity.ok(orderRepository.findByUserId(user.getId()));
+        }
+        // If not logged in, they see no orders (or we could return 401)
+        return ResponseEntity.ok(Collections.emptyList());
     }
 
     @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody Order order) {
+    public ResponseEntity<?> createOrder(@RequestBody Order order, HttpSession session) {
         try {
             System.out.println(">>> RECEIVED ORDER: " + order);
+
+            com.cloud.kitchen.model.User user = (com.cloud.kitchen.model.User) session.getAttribute("user");
+            if (user != null) {
+                order.setUserId(user.getId());
+                if (order.getCustomerName() == null || order.getCustomerName().isEmpty()) {
+                    order.setCustomerName(user.getName());
+                }
+            } else {
+                return ResponseEntity.status(401).body("Error: Customer must be logged in to place an order.");
+            }
 
             if (order.getStatus() == null || order.getStatus().isEmpty()) {
                 order.setStatus("CONFIRMED");
