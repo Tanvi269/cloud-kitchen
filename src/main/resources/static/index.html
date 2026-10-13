@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud Kitchen - Fresh Food Delivered</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         * {
@@ -380,61 +381,100 @@
         }
 
         /* ===== UPI PAYMENT ===== */
+        /* ===== UPI PAYMENT ===== */
         .upi-panel {
             display: none;
             margin-top: 16px;
-            padding: 20px;
+            padding: 22px;
             background: var(--bg-elevated);
-            border: 1px solid rgba(255,107,53,0.3);
-            border-radius: 12px;
+            border: 1px solid rgba(255,107,53,0.35);
+            border-radius: 14px;
             animation: slideUp 0.25s ease;
         }
         .upi-panel.visible { display: block; }
 
-        .upi-panel h4 {
+        .upi-panel-title {
             font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 14px;
+            font-weight: 800;
             color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upi-amount-badge {
+            background: rgba(255,107,53,0.15);
+            border: 1px solid rgba(255,107,53,0.4);
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
         }
 
         .upi-qr-wrap {
             display: flex;
-            gap: 20px;
+            gap: 22px;
             align-items: flex-start;
             flex-wrap: wrap;
         }
 
         .upi-qr-box {
             background: white;
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 10px;
-            width: 130px;
-            height: 130px;
+            width: 148px;
+            height: 148px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 60px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .upi-qr-box canvas,
+        .upi-qr-box img {
+            border-radius: 6px;
+        }
+
+        .upi-qr-loading {
+            font-size: 13px;
+            color: #888;
+            text-align: center;
         }
 
         .upi-details {
             flex: 1;
+            min-width: 180px;
         }
 
-        .upi-id-box {
+        .upi-id-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 10px 14px;
-            font-size: 15px;
-            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .upi-id-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-right: 4px;
+            white-space: nowrap;
+        }
+
+        .upi-id-value {
+            font-size: 14px;
+            font-weight: 800;
             color: var(--primary);
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
+            flex: 1;
+            word-break: break-all;
         }
 
         .copy-btn {
@@ -442,43 +482,100 @@
             color: white;
             border: none;
             border-radius: 6px;
-            padding: 4px 10px;
+            padding: 5px 12px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             width: auto;
             margin: 0;
+            white-space: nowrap;
+            transition: background 0.2s;
         }
         .copy-btn:hover { background: var(--primary-dark); }
+
+        .upi-app-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .upi-app-btn {
+            flex: 1;
+            min-width: 80px;
+            padding: 8px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.18s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: auto;
+            margin: 0;
+        }
+        .upi-app-btn:hover {
+            background: var(--bg-elevated);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
 
         .upi-steps {
             list-style: none;
             font-size: 13px;
             color: var(--text-muted);
-            line-height: 1.8;
+            line-height: 1.9;
         }
         .upi-steps li::before { content: '✔ '; color: var(--success); }
 
         .upi-confirm-row {
-            margin-top: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .upi-confirm-row label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
         }
 
         .upi-confirm-row input[type="text"] {
-            flex: 1;
-            min-width: 180px;
-            padding: 10px 14px;
+            width: 100%;
+            padding: 11px 14px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 8px;
             color: var(--text);
             font-size: 14px;
             outline: none;
+            transition: border 0.2s;
         }
         .upi-confirm-row input[type="text"]:focus { border-color: var(--primary); }
+
+        .upi-paid-banner {
+            display: none;
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: rgba(34,197,94,0.12);
+            border: 1px solid rgba(34,197,94,0.4);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--success);
+            animation: slideUp 0.3s ease;
+        }
+        .upi-paid-banner.show { display: flex; align-items: center; gap: 8px; }
 
         /* email error highlight */
         .input-error { border-color: var(--danger) !important; }
@@ -843,24 +940,61 @@
 
     <!-- UPI PAYMENT PANEL -->
     <div class="upi-panel" id="upiPanel">
-        <h4>💳 Pay via UPI</h4>
+        <div class="upi-panel-title">
+            💳 Pay via UPI
+            <span class="upi-amount-badge" id="upiAmountBadge">₹0</span>
+        </div>
+
         <div class="upi-qr-wrap">
-            <div class="upi-qr-box">📱</div>
+            <!-- REAL QR CODE injected here -->
+            <div class="upi-qr-box" id="upiQrBox">
+                <div class="upi-qr-loading">Generating QR…</div>
+            </div>
+
             <div class="upi-details">
-                <div class="upi-id-box">
-                    <span id="upiIdText">cloudkitchen@upi</span>
-                    <button class="copy-btn" onclick="copyUpiId()">Copy</button>
+                <!-- UPI ID row -->
+                <div class="upi-id-row">
+                    <span class="upi-id-label">UPI ID:</span>
+                    <span class="upi-id-value" id="upiIdText">cloudkitchen@upi</span>
+                    <button class="copy-btn" id="copyUpiBtn" onclick="copyUpiId()">Copy</button>
                 </div>
+
+                <!-- Quick-launch buttons -->
+                <div class="upi-app-btns">
+                    <button class="upi-app-btn" onclick="openUpiApp('gpay')">
+                        <span>🟢</span> GPay
+                    </button>
+                    <button class="upi-app-btn" onclick="openUpiApp('phonepe')">
+                        <span>🟣</span> PhonePe
+                    </button>
+                    <button class="upi-app-btn" onclick="openUpiApp('paytm')">
+                        <span>🔵</span> Paytm
+                    </button>
+                    <button class="upi-app-btn" onclick="openUpiApp('upi')">
+                        <span>📱</span> Any App
+                    </button>
+                </div>
+
                 <ul class="upi-steps">
-                    <li>Open any UPI app (GPay, PhonePe, Paytm…)</li>
-                    <li>Scan QR <em>or</em> send to UPI ID above</li>
-                    <li>Enter the exact order amount</li>
-                    <li>Paste your Transaction / UTR ID below</li>
+                    <li>Scan QR <em>or</em> tap an app button above</li>
+                    <li>Amount auto-filled: <strong id="upiAmountText">₹0</strong></li>
+                    <li>Complete payment &amp; note the UTR / Txn ID</li>
+                    <li>Paste UTR ID below and confirm order</li>
                 </ul>
             </div>
         </div>
+
         <div class="upi-confirm-row">
-            <input type="text" id="upiTransactionId" placeholder="Enter UPI Transaction / UTR ID" maxlength="50">
+            <label>UPI Transaction / UTR ID (required)</label>
+            <input type="text" id="upiTransactionId"
+                   placeholder="e.g. 426839201847"
+                   maxlength="50"
+                   oninput="onUtrInput()">
+        </div>
+
+        <!-- Payment received notification -->
+        <div class="upi-paid-banner" id="upiPaidBanner">
+            ✅ Payment received! Place your order below.
         </div>
     </div>
 
@@ -1333,23 +1467,99 @@ function showCheckout() {
 /* ===========================
    UPI HELPERS
 =========================== */
+const UPI_ID   = 'cloudkitchen@upi';   // ← change to your real UPI ID
+const UPI_NAME = 'Cloud Kitchen';
+let   _upiQrInstance = null;
+
+function getCartTotal() {
+    return cart.reduce((s, i) => s + i.price * i.quantity, 0);
+}
+
+function buildUpiString(amount) {
+    const amt = amount > 0 ? amount : '';
+    const note = encodeURIComponent('Cloud Kitchen Order');
+    const name = encodeURIComponent(UPI_NAME);
+    return `upi://pay?pa=${UPI_ID}&pn=${name}&am=${amt}&cu=INR&tn=${note}`;
+}
+
+function generateUpiQr() {
+    const amount  = getCartTotal();
+    const upiStr  = buildUpiString(amount);
+    const box     = document.getElementById('upiQrBox');
+
+    // Update amount badges
+    document.getElementById('upiAmountBadge').textContent = '₹' + amount;
+    document.getElementById('upiAmountText').textContent  = '₹' + amount;
+
+    // Destroy old QR
+    if (_upiQrInstance) { _upiQrInstance.clear(); _upiQrInstance = null; }
+    box.innerHTML = '';
+
+    try {
+        _upiQrInstance = new QRCode(box, {
+            text:           upiStr,
+            width:          128,
+            height:         128,
+            colorDark:      '#000000',
+            colorLight:     '#ffffff',
+            correctLevel:   QRCode.CorrectLevel.M
+        });
+    } catch (e) {
+        box.innerHTML = '<div class="upi-qr-loading">QR failed.<br>Use UPI ID below.</div>';
+    }
+}
+
 function toggleUpiPanel() {
     const method = document.getElementById('paymentMethod').value;
     const panel  = document.getElementById('upiPanel');
     panel.classList.toggle('visible', method === 'UPI');
-    // Clear transaction ID when switching away
-    if (method !== 'UPI') document.getElementById('upiTransactionId').value = '';
+    if (method === 'UPI') {
+        generateUpiQr();
+    } else {
+        document.getElementById('upiTransactionId').value = '';
+        document.getElementById('upiPaidBanner').classList.remove('show');
+    }
+}
+
+function openUpiApp(app) {
+    const amount = getCartTotal();
+    const upiStr = buildUpiString(amount);
+    const intents = {
+        gpay:    'tez://upi/pay?' + upiStr.split('?')[1],
+        phonepe: 'phonepe://pay?'  + upiStr.split('?')[1],
+        paytm:   'paytmmp://pay?'  + upiStr.split('?')[1],
+        upi:     upiStr
+    };
+    const url = intents[app] || upiStr;
+
+    // Try to open the native app; fallback link opens Play Store / web
+    const a = document.createElement('a');
+    a.href = url;
+    a.rel  = 'noopener';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
 }
 
 function copyUpiId() {
-    const id = document.getElementById('upiIdText').textContent;
+    const id  = document.getElementById('upiIdText').textContent.trim();
+    const btn = document.getElementById('copyUpiBtn');
     navigator.clipboard.writeText(id).then(() => {
-        const btn = document.querySelector('.copy-btn');
         btn.textContent = 'Copied!';
         setTimeout(() => btn.textContent = 'Copy', 2000);
     }).catch(() => {
         prompt('Copy this UPI ID:', id);
     });
+}
+
+function onUtrInput() {
+    const val    = document.getElementById('upiTransactionId').value.trim();
+    const banner = document.getElementById('upiPaidBanner');
+    if (val.length >= 8) {
+        banner.classList.add('show');
+    } else {
+        banner.classList.remove('show');
+    }
 }
 
 /* ===========================
