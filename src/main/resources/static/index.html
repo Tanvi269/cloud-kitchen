@@ -379,6 +379,118 @@
             display: none;
         }
 
+        /* ===== UPI PAYMENT ===== */
+        .upi-panel {
+            display: none;
+            margin-top: 16px;
+            padding: 20px;
+            background: var(--bg-elevated);
+            border: 1px solid rgba(255,107,53,0.3);
+            border-radius: 12px;
+            animation: slideUp 0.25s ease;
+        }
+        .upi-panel.visible { display: block; }
+
+        .upi-panel h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            color: var(--primary);
+        }
+
+        .upi-qr-wrap {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .upi-qr-box {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            width: 130px;
+            height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 60px;
+        }
+
+        .upi-details {
+            flex: 1;
+        }
+
+        .upi-id-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .copy-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            width: auto;
+            margin: 0;
+        }
+        .copy-btn:hover { background: var(--primary-dark); }
+
+        .upi-steps {
+            list-style: none;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+        .upi-steps li::before { content: '✔ '; color: var(--success); }
+
+        .upi-confirm-row {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .upi-confirm-row input[type="text"] {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+        }
+        .upi-confirm-row input[type="text"]:focus { border-color: var(--primary); }
+
+        /* email error highlight */
+        .input-error { border-color: var(--danger) !important; }
+        .field-hint {
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+        .field-hint.show { display: block; }
+        .field-hint.err { color: var(--danger); }
+        .field-hint.ok { color: var(--success); }
+
         .checkout-section h2 {
             font-size: 20px;
             font-weight: 700;
@@ -723,10 +835,33 @@
 
     <div class="form-group">
         <label>Payment Method</label>
-        <select id="paymentMethod">
+        <select id="paymentMethod" onchange="toggleUpiPanel()">
             <option value="COD">Cash on Delivery</option>
             <option value="UPI">UPI</option>
         </select>
+    </div>
+
+    <!-- UPI PAYMENT PANEL -->
+    <div class="upi-panel" id="upiPanel">
+        <h4>💳 Pay via UPI</h4>
+        <div class="upi-qr-wrap">
+            <div class="upi-qr-box">📱</div>
+            <div class="upi-details">
+                <div class="upi-id-box">
+                    <span id="upiIdText">cloudkitchen@upi</span>
+                    <button class="copy-btn" onclick="copyUpiId()">Copy</button>
+                </div>
+                <ul class="upi-steps">
+                    <li>Open any UPI app (GPay, PhonePe, Paytm…)</li>
+                    <li>Scan QR <em>or</em> send to UPI ID above</li>
+                    <li>Enter the exact order amount</li>
+                    <li>Paste your Transaction / UTR ID below</li>
+                </ul>
+            </div>
+        </div>
+        <div class="upi-confirm-row">
+            <input type="text" id="upiTransactionId" placeholder="Enter UPI Transaction / UTR ID" maxlength="50">
+        </div>
     </div>
 
     <button class="btn btn-primary" onclick="placeOrder()" style="width:100%; padding:14px; font-size:16px; margin-top:8px;">
@@ -781,7 +916,9 @@
             </div>
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="regEmail" placeholder="you@example.com">
+                <input type="email" id="regEmail" placeholder="you@example.com"
+                       oninput="validateRegEmail()" onblur="validateRegEmail()">
+                <div class="field-hint" id="regEmailHint"></div>
             </div>
             <div class="form-group">
                 <label>Password</label>
@@ -898,6 +1035,31 @@ async function loginCustomer() {
 /* ===========================
    REGISTER
 =========================== */
+function isValidEmail(email) {
+    // Standard RFC-5322-ish pattern: local@domain.tld
+    return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+}
+
+function validateRegEmail() {
+    const input = document.getElementById('regEmail');
+    const hint  = document.getElementById('regEmailHint');
+    const email = input.value.trim();
+    if (!email) {
+        input.classList.remove('input-error');
+        hint.className = 'field-hint';
+        return;
+    }
+    if (isValidEmail(email)) {
+        input.classList.remove('input-error');
+        hint.textContent = '✔ Looks good!';
+        hint.className = 'field-hint ok show';
+    } else {
+        input.classList.add('input-error');
+        hint.textContent = '✖ Enter a valid email — e.g. you@example.com';
+        hint.className = 'field-hint err show';
+    }
+}
+
 async function registerCustomer() {
     const name = document.getElementById('regName').value.trim();
     const email = document.getElementById('regEmail').value.trim();
@@ -905,6 +1067,12 @@ async function registerCustomer() {
 
     if (!name || !email || !password) {
         showModalError('registerError', 'Please fill in all fields.');
+        return;
+    }
+    if (!isValidEmail(email)) {
+        showModalError('registerError', 'Please enter a valid email address (e.g. you@gmail.com).');
+        document.getElementById('regEmail').classList.add('input-error');
+        document.getElementById('regEmail').focus();
         return;
     }
     if (password.length < 6) {
@@ -1129,6 +1297,28 @@ function showCheckout() {
 }
 
 /* ===========================
+   UPI HELPERS
+=========================== */
+function toggleUpiPanel() {
+    const method = document.getElementById('paymentMethod').value;
+    const panel  = document.getElementById('upiPanel');
+    panel.classList.toggle('visible', method === 'UPI');
+    // Clear transaction ID when switching away
+    if (method !== 'UPI') document.getElementById('upiTransactionId').value = '';
+}
+
+function copyUpiId() {
+    const id = document.getElementById('upiIdText').textContent;
+    navigator.clipboard.writeText(id).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+    }).catch(() => {
+        prompt('Copy this UPI ID:', id);
+    });
+}
+
+/* ===========================
    PLACE ORDER
 =========================== */
 async function placeOrder() {
@@ -1152,15 +1342,27 @@ async function placeOrder() {
         return;
     }
 
+    // UPI: require transaction ID
+    if (payment === 'UPI') {
+        const upiTxn = document.getElementById('upiTransactionId').value.trim();
+        if (!upiTxn) {
+            alert('Please enter your UPI Transaction / UTR ID to confirm payment.');
+            document.getElementById('upiTransactionId').focus();
+            return;
+        }
+    }
+
     const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
     const totalItems = cart.reduce((sum, i) => sum + i.quantity, 0);
     const foodItemsStr = cart.map(i => `${i.name} x${i.quantity} @ ₹${i.price}`).join(', ');
+
+    const upiTxnId = payment === 'UPI' ? document.getElementById('upiTransactionId').value.trim() : '';
 
     const orderData = {
         customerName: name,
         phoneNumber: phone,
         deliveryAddress: address,
-        paymentMethod: payment,
+        paymentMethod: payment + (upiTxnId ? ` (TXN: ${upiTxnId})` : ''),
         items: totalItems,
         total: total,
         status: 'CONFIRMED',
