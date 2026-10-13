@@ -894,7 +894,11 @@
 
             <div class="form-group">
                 <label>Email</label>
-                <input type="email" id="loginEmail" placeholder="you@example.com">
+                <input type="email" id="loginEmail" placeholder="you@example.com"
+                       oninput="validateLoginEmail()" onblur="validateLoginEmail()">
+                <div class="field-hint err show" id="loginEmailHint" style="color:#ef4444;">
+                    e.g. <strong>xyz@gmail.com</strong>
+                </div>
             </div>
             <div class="form-group">
                 <label>Password</label>
@@ -1001,6 +1005,30 @@ function updateNavForUser(user) {
 /* ===========================
    LOGIN
 =========================== */
+function validateLoginEmail() {
+    const input = document.getElementById('loginEmail');
+    const hint  = document.getElementById('loginEmailHint');
+    const email = input.value.trim();
+    if (!email) {
+        input.classList.remove('input-error');
+        hint.innerHTML = 'e.g. <strong>xyz@gmail.com</strong>';
+        hint.className = 'field-hint err show';
+        hint.style.color = '#ef4444';
+        return;
+    }
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        input.classList.remove('input-error');
+        hint.textContent = '✔ Looks good!';
+        hint.className = 'field-hint ok show';
+        hint.style.color = '';
+    } else {
+        input.classList.add('input-error');
+        hint.innerHTML = '✖ Enter a valid email &mdash; e.g. <strong>xyz@gmail.com</strong>';
+        hint.className = 'field-hint err show';
+        hint.style.color = '#ef4444';
+    }
+}
+
 async function loginCustomer() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
