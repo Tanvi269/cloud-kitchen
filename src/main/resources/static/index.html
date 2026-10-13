@@ -918,7 +918,9 @@
                 <label>Email</label>
                 <input type="email" id="regEmail" placeholder="you@example.com"
                        oninput="validateRegEmail()" onblur="validateRegEmail()">
-                <div class="field-hint" id="regEmailHint"></div>
+                <div class="field-hint err show" id="regEmailHint" style="color:#ef4444;">
+                    e.g. <strong>xyz@gmail.com</strong>
+                </div>
             </div>
             <div class="form-group">
                 <label>Password</label>
@@ -1046,17 +1048,21 @@ function validateRegEmail() {
     const email = input.value.trim();
     if (!email) {
         input.classList.remove('input-error');
-        hint.className = 'field-hint';
+        hint.innerHTML = 'e.g. <strong>xyz@gmail.com</strong>';
+        hint.className = 'field-hint err show';
+        hint.style.color = '#ef4444';
         return;
     }
     if (isValidEmail(email)) {
         input.classList.remove('input-error');
         hint.textContent = '✔ Looks good!';
         hint.className = 'field-hint ok show';
+        hint.style.color = '';
     } else {
         input.classList.add('input-error');
-        hint.textContent = '✖ Enter a valid email — e.g. you@example.com';
+        hint.innerHTML = '✖ Enter a valid email &mdash; e.g. <strong>xyz@gmail.com</strong>';
         hint.className = 'field-hint err show';
+        hint.style.color = '#ef4444';
     }
 }
 
