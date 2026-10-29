@@ -221,14 +221,3 @@ food_items    → id, name, description, price, category, image_url, available
 
 ---
 
-## 📄 License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
----
-
-<div align="center">
-Made with ❤️ by <strong>Tanvi Patil</strong>
-<br>
-⭐ Star this repo if you found it helpful!
-</div>
